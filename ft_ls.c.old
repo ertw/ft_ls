@@ -1,0 +1,163 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   ft_ls.c                                            :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: ewilliam <erik@himself.in>                 +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2017/03/06 11:35:17 by ewilliam          #+#    #+#             */
+/*   Updated: 2017/03/09 18:13:23 by ewilliam         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
+#include "ft_ls.h"
+
+int		ft_errx(int e, const char *s)
+{
+	dprintf(2, "%s\n", s);
+	exit(e);
+}
+
+typedef struct			s_input
+{
+	struct stat			stats;
+	char				name[256];
+}						t_input;
+
+typedef struct			s_opts
+{
+	int					l;
+	int					R;
+	int					r;
+	int					t;
+}						t_opts;
+
+void		lstinsert(t_list *dst, t_list *new)
+{
+	t_list	*tmp;
+	
+	tmp = dst->next;
+	dst->next = new;
+	new->next = tmp;
+}
+
+typedef struct	s_int
+{
+	int			n;
+}				t_int;
+
+int		comparer(t_list *old, t_list * new)
+{
+	if (((t_int*)old->content)->n > ((t_int*)new->content)->n)
+		return (1);
+	return (0);
+}
+
+void		lstsort(t_list *head, t_list *node, int(*compare)(t_list*, t_list*))
+{
+	t_list	*cursor;
+
+	cursor = head;
+	while (cursor && !compare(cursor, node))
+		cursor = cursor->next;
+	if (compare(cursor, node))
+	{
+		lstinsert(cursor, node);
+	}
+}
+
+t_list		*dirtolist(t_input *input)
+{
+	t_list	*head;
+	t_list	*cursor;
+
+	while (dirp && (dptr = readdir(dirp)) != NULL)
+	{
+		stat(dptr->d_name, stats);
+		printf("%s ", dptr->d_name);
+		printf("%s\n", S_ISDIR(stats->st_mode) ? "dir" : "file");
+		if (cursor)
+		{
+			cursor->next = ft_lstnew(input, sizeof(input));
+			cursor = cursor->next;
+		}
+		else
+		{
+			head = ft_lstnew(input, sizeof(input));
+			cursor = head;
+		}
+	}
+	return (head);
+}
+
+int		main(int ac, char **av)
+{
+	DIR		 		*dirp = NULL;
+	struct dirent	*dptr = NULL;
+	struct stat		*stats = NULL;
+	unsigned short	arg = 1;
+	t_input			*input = NULL;
+	t_list	*head = NULL;
+	t_list	*cursor = NULL;
+
+	stats = ft_memalloc(sizeof(*stats));
+	input = ft_memalloc(sizeof(*input));
+	while (arg < ac)
+	{
+//		printf("Try open: %s\n", av[arg]);
+		stat(av[arg], &(input->stats));
+		if (cursor)
+		{
+			cursor->next = ft_lstnew(input, sizeof(input));
+			cursor = cursor->next;
+		}
+		else
+		{
+			head = ft_lstnew(input, sizeof(input));
+			cursor = head;
+		}
+		((t_input*)cursor->content)->name = ft_strdup(av[arg]);
+//		printf("%s is %s\n", av[arg], S_ISREG(stats->st_mode) ? "a file" : "not a file");
+		if (!(dirp = opendir(av[arg])))
+			dprintf(2, "%s: No such file or directory\n", av[arg]);
+		++arg;
+	}
+	while (dirp && (dptr = readdir(dirp)) != NULL)
+	{
+		stat(dptr->d_name, stats);
+		printf("%s ", dptr->d_name);
+		printf("%s\n", S_ISDIR(stats->st_mode) ? "dir" : "file");
+	}
+	if (dirp)
+		(void)closedir(dirp);
+	free(&(input->stats));
+	
+//	#define SIZE 9
+//	int i = 0;
+//
+//	t_int	*container;
+//
+//	while (i < SIZE)
+//	{
+//		if (cursor)
+//		{
+//			cursor->next = ft_lstnew(container, sizeof(container));
+//			cursor = cursor->next;
+//		}
+//		else
+//		{
+//			head = ft_lstnew(container, sizeof(container));
+//			cursor = head;
+//		}
+//		((t_int*)cursor->content)->n = i;
+//		++i;
+//	}
+	cursor = head;
+	while (cursor)
+	{
+		printf("%s\n", ((t_input*)cursor->content)->name);
+		printf("%lld\n", ((t_input*)cursor->content)->stats.st_size);
+//		ft_strdel(&((t_input*)cursor->content)->name);
+		cursor = cursor->next;
+	}
+}
