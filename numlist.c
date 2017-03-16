@@ -18,50 +18,45 @@ int		lst_ishead(t_list *head, t_list *node)
 //#define lst_ishead(head, node) ((head)->head == (node) ? 1 : 0)
 #define lst_content(node) ((node)->content)
 #define lst_next(node) ((node)->next)
+#define IS_TAIL !cursor->next
+#define IS_HEAD cursor == head
+
+void		lst_insert(t_list **alst, void *content, size_t size)
+{
+	t_list	*tmp;
+
+	tmp = *alst;
+	*alst = ft_lstnew(content, size);
+	(*alst)->next = tmp;
+}
 
 int		main(int ac, char **av)
 {
 	int	arg = 1;
-	t_list	*head, *cursor, *tmp;
+	t_list	*head, *cursor;
 
 	head = NULL;
 	cursor = NULL;
-	tmp = NULL;
 	if (ac < 2)
 		return (-1);
 	while (arg < ac)
 	{
 		while (cursor)
-		{
-			if (ft_strcmp((char*)cursor->content, av[arg]) > 0)
+		{	
+			if (IS_HEAD and (ft_strcmp((char*)cursor->content, av[arg]) > 0))
 			{
-				if (cursor == head)
-				{
-					tmp = head;
-					head = ft_lstnew(av[arg], sizeof(av[arg]) * ft_strlen(av[arg]));
-					head->next = tmp;
-					printf("head\n");
-				}
-				else
-				{
-					tmp = cursor;
-					cursor = ft_lstnew(av[arg], sizeof(av[arg]) * ft_strlen(av[arg]));
-					cursor->next = tmp;
-					printf("norm\n");
-				}
+				lst_insert(&head, av[arg], sizeof(av[arg]) * ft_strlen(av[arg]));
 				break;
 			}
-			if (!cursor->next)
+			else if (IS_TAIL or (ft_strcmp((char*)cursor->next->content, av[arg]) > 0))
 			{
-				cursor->next = ft_lstnew(av[arg], sizeof(av[arg]) * ft_strlen(av[arg]));
+				lst_insert(&cursor->next, av[arg], sizeof(av[arg]) * ft_strlen(av[arg]));
 				break;
 			}
 			cursor = cursor->next;
 		}
 		if (!head)
-		{
 			head = ft_lstnew(av[arg], sizeof(av[arg]) * ft_strlen(av[arg]));
-		}
 		cursor = head;
 		++arg;
 	}
