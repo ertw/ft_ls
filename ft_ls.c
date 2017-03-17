@@ -1,4 +1,7 @@
 #include "ft_ls.h"
+#include <iso646.h>
+#define IS_TAIL !cursor->next
+#define IS_HEAD cursor == head
 
 typedef struct			s_input
 {
@@ -13,6 +16,15 @@ typedef struct			s_opts
 	int					r;
 	int					t;
 }						t_opts;
+
+void		lst_insert(t_list **alst, void *content, size_t size)
+{
+	t_list	*tmp;
+
+	tmp = *alst;
+	*alst = ft_lstnew(content, size);
+	(*alst)->next = tmp;
+}
 
 t_list			*processinput(int ac, char **av)
 {
@@ -45,34 +57,26 @@ void			readfiles(DIR *dirp)
 	struct dirent	*dptr;
 	t_list		*head = NULL;
 	t_list		*cursor = NULL;
-	t_list		*tmp = NULL;
 
 	while ((dptr = readdir(dirp)))
 	{
 		while (cursor)
 		{
-			if (ft_strcmp(dptr->d_name, (char*)cursor->content) > 0)
+			if (IS_HEAD and (ft_strcmp((char*)cursor->content, dptr->d_name) > 0))
 			{
-				tmp = cursor->next;
-				cursor->next = ft_lstnew(dptr->d_name, 256);
-				cursor->next->next = tmp;
-				cursor = head;
+				lst_insert(&head, dptr->d_name, 256);
+				break;
 			}
-			else if (ft_strcmp(dptr->d_name, (char*)cursor->content) < 0)
+			else if (IS_TAIL or (ft_strcmp((char*)cursor->next->content, dptr->d_name) > 0))
 			{
-				tmp = cursor->next;
-				cursor->next = ft_lstnew(dptr->d_name, 256);
-				cursor->next->next = tmp;
-				cursor = head;
+				lst_insert(&cursor->next, dptr->d_name, 256);
+				break;
 			}
-			else
-				cursor = cursor->next;
+			cursor = cursor->next;
 		}
-		if (!cursor)
-		{
+		if (!head)
 			head = ft_lstnew(dptr->d_name, 256);
-			cursor = head;
-		}
+		cursor = head;
 	}
 	cursor = head;
 	while (cursor)
