@@ -8,3 +8,4 @@ a.out*
 test.c
 main.c
 notes.txt
+alphabet/*
