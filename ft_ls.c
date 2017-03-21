@@ -1,5 +1,4 @@
 #include "ft_ls.h"
-#include <iso646.h>
 #define IS_TAIL !cursor->next
 #define IS_HEAD cursor == head
 
@@ -62,12 +61,12 @@ void			readfiles(DIR *dirp)
 	{
 		while (cursor)
 		{
-			if (IS_HEAD and (ft_strcmp((char*)cursor->content, dptr->d_name) > 0))
+			if (IS_HEAD && (ft_strcmp((char*)cursor->content, dptr->d_name) < 0))
 			{
 				lst_insert(&head, dptr->d_name, 256);
 				break;
 			}
-			else if (IS_TAIL or (ft_strcmp((char*)cursor->next->content, dptr->d_name) > 0))
+			else if (IS_TAIL || (ft_strcmp((char*)cursor->next->content, dptr->d_name) < 0))
 			{
 				lst_insert(&cursor->next, dptr->d_name, 256);
 				break;
@@ -81,8 +80,13 @@ void			readfiles(DIR *dirp)
 	cursor = head;
 	while (cursor)
 	{
-		printf("%s\n", (char*)cursor->content);
-		cursor = cursor->next;
+		while (cursor && *(char*)cursor->content == '.')
+			cursor = cursor->next;
+		if (cursor)
+		{
+			printf("%s\n", (char*)cursor->content);
+			cursor = cursor->next;
+		}
 	}
 }
 
@@ -101,7 +105,6 @@ t_list			*processfiles(t_list *head)
 			readfiles(dirp);
 			closedir(dirp);
 		}
-//		printf("%s\n", ((t_input*)cursor->content)->name);
 		cursor = cursor->next;
 	}
 	return (head);
