@@ -25,6 +25,16 @@ void		lst_insert(t_list **alst, void *content, size_t size)
 	(*alst)->next = tmp;
 }
 
+t_opts			parseflags(char *flags)
+{
+	t_opts	opts;
+
+	opts.l = 0;
+	opts.R = 0;
+	opts.r = 0;
+	opts.t = 0;
+	return (opts);
+}
 t_list			*processinput(int ac, char **av)
 {
 	unsigned short	arg = 1;
@@ -32,9 +42,17 @@ t_list			*processinput(int ac, char **av)
 	t_list		*cursor = NULL;
 	t_input		input;
 
+	while (av[arg] && *av[arg] == '-')
+	{
+		while (*av[arg]++)
+		{
+			printf("%c\n", *av[arg]);
+		}
+		++arg;
+	}
 	while (arg < ac)
 	{
-		ft_bzero(input.name, 256);
+//		ft_bzero(input.name, 256);
 		ft_memmove(input.name, av[arg], ft_strlen(av[arg]));
 		if (cursor)
 		{
