@@ -38,10 +38,10 @@ struct stat	read_stats(const char *path)
 /* this will create each node*/
 t_list		*make_lst(struct dirent *dptr)
 {
+	t_list		*node;
 	t_container	cont;
 	DIR		*dirp;
 	struct stat	stats;
-	t_list		*node;
 
 	ft_memmove(&cont.s_dirent, dptr, sizeof(*dptr));
 	stat(dptr->d_name, &stats);
@@ -50,7 +50,7 @@ t_list		*make_lst(struct dirent *dptr)
 	printf("stat  : %ld\n", cont.s_stat.st_size);
 	node = ft_lstnew(&cont, sizeof(cont));
 //	ft_memdel((void**)&dirp);
-	return (ft_lstnew(&cont, sizeof(cont)));
+	return (node);
 }
 
 /* this will read dir in a while loop, and call make_lst*/
