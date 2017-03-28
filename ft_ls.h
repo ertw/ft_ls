@@ -16,6 +16,7 @@
 # include "./libft/libft.h"
 # include <dirent.h>
 # include <stdio.h>
+# include <time.h>
 # include <sys/stat.h>
 
 #endif
