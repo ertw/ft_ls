@@ -17,6 +17,8 @@
 # include <dirent.h>
 # include <stdio.h>
 # include <time.h>
+# include <grp.h>
+# include <pwd.h>
 # include <sys/stat.h>
 
 #endif
