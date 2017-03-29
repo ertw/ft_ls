@@ -20,9 +20,14 @@
 # include <grp.h>
 # include <pwd.h>
 # include <sys/stat.h>
+#endif
 
 #ifndef quad_t
 # define quad_t long double
 #endif
 
+#ifdef __APPLE__
+#define CONT_S_STAT_CTIM CONT_S_STAT.st_ctimespec.tv_sec
+#elif __linux__
+#define CONT_S_STAT_CTIM CONT_S_STAT.st_ctim.tv_sec
 #endif

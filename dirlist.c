@@ -7,7 +7,6 @@
 #define CONT_S_STAT ((t_container*)cursor->content)->s_stat
 #define CONT_S_STAT_ATIM CONT_S_STAT.st_atim.tv_sec
 #define CONT_S_STAT_MTIM CONT_S_STAT.st_mtim.tv_sec
-#define CONT_S_STAT_CTIM CONT_S_STAT.st_ctimespec.tv_sec
 #define CONT_GROUPNAME ((t_container*)cursor->content)->groupname
 #define CONT_USERNAME ((t_container*)cursor->content)->username
 #define CONT_MODE ((t_container*)cursor->content)->mode
@@ -48,7 +47,7 @@ struct stat	read_stats(const char *path)
 {
 	struct stat	stats;
 
-	lstat(path, &stats);
+	stat(path, &stats);
 	return (stats);
 }
 
