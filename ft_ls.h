@@ -21,4 +21,8 @@
 # include <pwd.h>
 # include <sys/stat.h>
 
+#ifndef quad_t
+# define quad_t long double
+#endif
+
 #endif

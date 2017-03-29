@@ -7,7 +7,7 @@
 #define CONT_S_STAT ((t_container*)cursor->content)->s_stat
 #define CONT_S_STAT_ATIM CONT_S_STAT.st_atim.tv_sec
 #define CONT_S_STAT_MTIM CONT_S_STAT.st_mtim.tv_sec
-#define CONT_S_STAT_CTIM CONT_S_STAT.st_ctim.tv_sec
+#define CONT_S_STAT_CTIM CONT_S_STAT.st_ctimespec.tv_sec
 #define CONT_GROUPNAME ((t_container*)cursor->content)->groupname
 #define CONT_USERNAME ((t_container*)cursor->content)->username
 #define CONT_MODE ((t_container*)cursor->content)->mode
@@ -216,15 +216,15 @@ int		main(void)
 	cursor = head;
 //	memmove(timestr, ctime(&CONT_S_STAT_ATIM), 26);
 //	write(1, timestr + 4, 12);
-	printf("Total %ld\n", get_total_blocks(head));
+	printf("Total %Lf\n", get_total_blocks(head));
 	while (cursor)
 	{
-		printf("Blox: %ld ", CONT_BLOCKS);
+		printf("Blox: %Lf ", CONT_BLOCKS);
 		print_permissions(cursor);
 		printf(" %d ", CONT_NLINKS);
 		printf("%s ", CONT_USERNAME);
 		printf("%s ", CONT_GROUPNAME);
-		printf("% 7ld ", CONT_S_STAT.st_size);
+		printf("% 7lld ", CONT_S_STAT.st_size);
 		strncpy(timestr, ctime(&CONT_S_STAT_CTIM) + 4, 12);
 		printf("%s ", timestr);
 		printf("%s \n", CONT_DIRENT_D_NAME);
