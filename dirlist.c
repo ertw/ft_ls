@@ -200,7 +200,7 @@ quad_t		get_total_blocks(t_list *head)
 		blocks += CONT_BLOCKS;
 		cursor = cursor->next;
 	}
-	return (blocks / 2);
+	return (blocks / BLOCK_DIVISOR);
 }
 
 int		main(void)
@@ -215,10 +215,10 @@ int		main(void)
 	cursor = head;
 //	memmove(timestr, ctime(&CONT_S_STAT_ATIM), 26);
 //	write(1, timestr + 4, 12);
-	printf("Total %Lf\n", get_total_blocks(head));
+	printf("Total %.Lf\n", get_total_blocks(head));
 	while (cursor)
 	{
-		printf("Blox: %Lf ", CONT_BLOCKS);
+		printf("Blox: %.Lf ", CONT_BLOCKS);
 		print_permissions(cursor);
 		printf(" %d ", CONT_NLINKS);
 		printf("%s ", CONT_USERNAME);

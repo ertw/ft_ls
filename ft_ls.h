@@ -27,7 +27,9 @@
 #endif
 
 #ifdef __APPLE__
-#define CONT_S_STAT_CTIM CONT_S_STAT.st_ctimespec.tv_sec
+# define CONT_S_STAT_CTIM CONT_S_STAT.st_ctimespec.tv_sec
+# define BLOCK_DIVISOR 1
 #elif __linux__
-#define CONT_S_STAT_CTIM CONT_S_STAT.st_ctim.tv_sec
+# define CONT_S_STAT_CTIM CONT_S_STAT.st_ctim.tv_sec
+# define BLOCK_DIVISOR 2
 #endif
