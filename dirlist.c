@@ -15,11 +15,6 @@
 #define MAX_USERNAME_LEN 33
 #define MAX_GROUPNAME_LEN 33
 
-//	printf("dirent: %s\n", cont.s_dirent.d_name);
-//	printf("stat  : %ld\n", cont.s_stat.st_size);
-//	printf("group: %s\n", grp->gr_name);
-//	printf("username: %s\n", pwd->pw_name);
-
 typedef struct			s_metadata
 {
 	uintmax_t		maxsize;			//largest file, for printf width
@@ -151,16 +146,16 @@ t_metadata	*init_metadata(t_metadata *metadata)
 }
 
 /* loop through the directory and sort*/
-t_list		*read_dir(void)
+t_list		*read_dir(DIR *dirp)
 {
 	t_list		*head, *cursor;
 	struct dirent	*dptr;
-	DIR		*dirp;
+//	DIR		*dirp;
 	t_metadata	*metadata;
 	metadata = init_metadata(metadata);
 	head = NULL;
 	cursor = NULL;
-	dirp = opendir(".");
+//	dirp = opendir(".");
 	while((dptr = readdir(dirp)))
 	{
 		while (cursor)
@@ -181,7 +176,7 @@ t_list		*read_dir(void)
 			head = lst_make_node(dptr, metadata);
 		cursor = head;
 	}
-	closedir(dirp);
+//	closedir(dirp);
 	return (head);
 }
 
@@ -231,15 +226,74 @@ quad_t		get_total_blocks(t_list *head)
 	return (CONT(head)->metadata->totalblocks / BLOCK_DIVISOR);
 }
 
+t_list			*processfiles(t_list *head)
+{
+	DIR		*dirp = NULL;
+	t_list		*cursor = NULL;
+
+	cursor = head;
+	while (cursor)
+	{
+		if (!(dirp = opendir(CONT(cursor)->s_dirent.d_name)))
+			dprintf(2, "%s: No such file or directory\n", (CONT(cursor)->s_dirent.d_name));
+		else
+		{
+			read_dir(dirp);
+			closedir(dirp);
+		}
+		cursor = cursor->next;
+	}
+	return (head);
+}
+
+t_list			*processinput(int ac, char **av)
+{
+	unsigned short	arg = 1;
+	t_list		*head = NULL;
+	t_list		*cursor = NULL;
+	t_container	cont;
+
+	while (av[arg] && *av[arg] == '-')
+	{
+		while (*av[arg]++)
+		{
+			printf("%c\n", *av[arg]);
+		}
+		++arg;
+	}
+	while (arg < ac)
+	{
+//		ft_bzero(input.name, 256);
+		ft_memmove(CONT(cursor)->s_dirent.d_name, av[arg], ft_strlen(av[arg]));
+		if (cursor)
+		{
+//			cursor->next = ft_lstnew(&cont, sizeof(cont));
+			cursor->next = lst_make_node(dptr, metadata);
+			cursor = cursor->next;
+		}
+		else
+		{
+//			head = ft_lstnew(&cont, sizeof(cont));
+			head = lst_make_node(dptr, metadata);
+			cursor = head;
+		}
+		++arg;
+	}
+	return (head);
+}
+
 int		main(void)
 {
 	char	timestr[13];
 	t_list	*head, *cursor;
 	int	sizelength;
+	DIR	*dirp;
 
 	head = NULL;
 	cursor = NULL;
-	head = read_dir();
+	dirp = opendir(".");
+	head = read_dir(dirp);
+	closedir(dirp);
 	cursor = head;
 	sizelength = 1 + ft_countplaces(CONT(head)->metadata->maxsize, 10);	// calc width for printing bytes
 	printf("total %.Lf\n", get_total_blocks(head));
