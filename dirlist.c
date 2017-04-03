@@ -17,26 +17,26 @@
 
 typedef struct			s_metadata
 {
-	uintmax_t		maxsize;			//largest file, for printf width
-	quad_t			totalblocks;			//sum of blocks
-}				t_metadata;
+	uintmax_t			maxsize;			//largest file, for printf width
+	quad_t				totalblocks;			//sum of blocks
+}						t_metadata;
 
 typedef struct			s_container
 {
 	struct dirent		s_dirent;			// removeme!
-	struct stat		s_stat;				// removeme!
-	char			username[MAX_USERNAME_LEN];
-	char			groupname[MAX_GROUPNAME_LEN];
-	uid_t			uid;
-	gid_t			gid;				
-	mode_t			mode;				
-	nlink_t			nlinks;				// number of links
-	quad_t			blocks;				// blocks of the file
-	off_t			size;				// bytes of file
-	t_metadata		*metadata;
-}				t_container;
+	struct stat			s_stat;				// removeme!
+	char				username[MAX_USERNAME_LEN];
+	char				groupname[MAX_GROUPNAME_LEN];
+	uid_t				uid;
+	gid_t				gid;
+	mode_t				mode;
+	nlink_t				nlinks;				// number of links
+	quad_t				blocks;				// blocks of the file
+	off_t				size;				// bytes of file
+	t_metadata			*metadata;
+}						t_container;
 
-void		lst_inst_node(t_list **alst, t_list *node)
+void					lst_inst_node(t_list **alst, t_list *node)
 {
 	t_list	*tmp;
 
@@ -45,7 +45,7 @@ void		lst_inst_node(t_list **alst, t_list *node)
 	(*alst)->next = tmp;
 }
 
-struct stat	read_stats(const char *path)
+struct stat				read_stats(const char *path)
 {
 	struct stat	stats;
 
@@ -53,72 +53,74 @@ struct stat	read_stats(const char *path)
 	return (stats);
 }
 
-void		set_groupname(t_container *cont)
+void					set_groupname(t_container *cont)
 {
 	struct group	*grp;
+
 	grp = getgrgid(cont->gid);
 	ft_memmove(cont->groupname, grp->gr_name, sizeof(grp->gr_name));
 }
 
-void		set_username(t_container *cont)
+void					set_username(t_container *cont)
 {
 	struct passwd	*pwd;
+
 	pwd = getpwuid(cont->uid);
 	ft_memmove(cont->username, pwd->pw_name, sizeof(pwd->pw_name));
 }
 
-void		set_uid(t_container *cont, struct stat *stats)
+void					set_uid(t_container *cont, struct stat *stats)
 {
 	cont->uid = stats->st_uid;
 }
 
-void		set_gid(t_container *cont, struct stat *stats)
+void					set_gid(t_container *cont, struct stat *stats)
 {
 	cont->gid = stats->st_gid;
 }
 
-void		set_mode(t_container *cont, struct stat *stats)
+void					set_mode(t_container *cont, struct stat *stats)
 {
 	cont->mode = stats->st_mode;
 }
 
-void		set_nlinks(t_container *cont, struct stat *stats)
+void					set_nlinks(t_container *cont, struct stat *stats)
 {
 	cont->nlinks = stats->st_nlink;
 }
 
-void		set_blocks(t_container *cont, struct stat *stats)
+void					set_blocks(t_container *cont, struct stat *stats)
 {
 	cont->blocks = stats->st_blocks;
 }
 
-void		set_metadata(t_container *cont, t_metadata *metadata)
+void					set_metadata(t_container *cont, t_metadata *metadata)
 {
 	cont->metadata = metadata;
 }
 
-void		set_blocks_meta(t_container *cont)
+void					set_blocks_meta(t_container *cont)
 {
 	cont->metadata->totalblocks += cont->blocks;
 }
 
-void		set_size(t_container *cont, struct stat *stats)
+void					set_size(t_container *cont, struct stat *stats)
 {
 	cont->size = stats->st_size;
 }
 
-void		set_maxsize_meta(t_container *cont)
+void					set_maxsize_meta(t_container *cont)
 {
 	if (cont->size > cont->metadata->maxsize)
 		cont->metadata->maxsize = cont->size;
 }
 
 /* this will create each node*/
-t_list		*lst_make_node(struct dirent *dptr, t_metadata *metadata)
+t_list					*lst_make_node(struct dirent *dptr, t_metadata *metadata)
 {
 	t_list		*node;
 	t_container	cont;
-	DIR		*dirp;
+	DIR			*dirp;
 	struct stat	stats;
 
 	ft_memmove(&cont.s_dirent, dptr, sizeof(*dptr));
@@ -137,7 +139,7 @@ t_list		*lst_make_node(struct dirent *dptr, t_metadata *metadata)
 	return (ft_lstnew(&cont, sizeof(cont)));
 }
 
-t_metadata	*init_metadata(t_metadata *metadata)
+t_metadata				*init_metadata(t_metadata *metadata)
 {
 	metadata = ft_memalloc(sizeof(metadata));
 	metadata->totalblocks = 0;
@@ -145,30 +147,31 @@ t_metadata	*init_metadata(t_metadata *metadata)
 	return (metadata);
 }
 
-/* loop through the directory and sort*/
-t_list		*read_dir(DIR *dirp)
+/*
+ * loop through the directory and sort
+ * */
+t_list					*read_dir(DIR *dirp)
 {
-	t_list		*head, *cursor;
+	t_list		*head;
+	t_list		*cursor;
 	struct dirent	*dptr;
-//	DIR		*dirp;
 	t_metadata	*metadata;
 	metadata = init_metadata(metadata);
 	head = NULL;
 	cursor = NULL;
-//	dirp = opendir(".");
-	while((dptr = readdir(dirp)))
+	while ((dptr = readdir(dirp)))
 	{
 		while (cursor)
 		{
 			if (IS_HEAD && (ft_strcmp(CONT(cursor)->s_dirent.d_name, dptr->d_name) > 0))
 			{
 				lst_inst_node(&head, lst_make_node(dptr, metadata));
-				break;
+				break ;
 			}
 			else if (IS_TAIL || (ft_strcmp(CONT(cursor->next)->s_dirent.d_name, dptr->d_name) > 0))
 			{
 				lst_inst_node(&cursor->next, lst_make_node(dptr, metadata));
-				break;
+				break ;
 			}
 			cursor = cursor->next;
 		}
@@ -176,12 +179,13 @@ t_list		*read_dir(DIR *dirp)
 			head = lst_make_node(dptr, metadata);
 		cursor = head;
 	}
-//	closedir(dirp);
 	return (head);
 }
 
-/* delete each list node*/
-void		lst_del(t_list *head)
+/*
+ * delete each list node
+ */
+void					lst_del(t_list *head)
 {
 	t_list	*cursor;
 	t_list	*tmp;
@@ -198,7 +202,7 @@ void		lst_del(t_list *head)
 	}
 }
 
-void		print_permissions(t_list *cursor)
+void					print_permissions(t_list *cursor)
 {
 	printf((S_ISDIR(CONT_MODE)) ? "d" : "-");
 	printf((CONT_MODE & S_IRUSR) ? "r" : "-");
@@ -221,16 +225,18 @@ void		print_permissions(t_list *cursor)
 		printf((CONT_MODE & S_IXOTH) ? "x" : "-");
 }
 
-quad_t		get_total_blocks(t_list *head)
+quad_t					get_total_blocks(t_list *head)
 {
 	return (CONT(head)->metadata->totalblocks / BLOCK_DIVISOR);
 }
 
-t_list			*processfiles(t_list *head)
+t_list					*processfiles(t_list *head)
 {
-	DIR		*dirp = NULL;
-	t_list		*cursor = NULL;
+	DIR			*dirp;
+	t_list		*cursor;
 
+	cursor = NULL;
+	dirp = NULL;
 	cursor = head;
 	while (cursor)
 	{
@@ -246,13 +252,16 @@ t_list			*processfiles(t_list *head)
 	return (head);
 }
 
-t_list			*processinput(int ac, char **av)
+t_list					*processinput(int ac, char **av)
 {
-	unsigned short	arg = 1;
-	t_list		*head = NULL;
-	t_list		*cursor = NULL;
-	t_container	cont;
+	unsigned short	arg;
+	t_list			*head;
+	t_list			*cursor;
+	t_container		cont;
 
+	arg = 1;
+	head = NULL;
+	cursor = NULL;
 	while (av[arg] && *av[arg] == '-')
 	{
 		while (*av[arg]++)
@@ -282,12 +291,13 @@ t_list			*processinput(int ac, char **av)
 	return (head);
 }
 
-int		main(void)
+int						main(void)
 {
 	char	timestr[13];
-	t_list	*head, *cursor;
-	int	sizelength;
-	DIR	*dirp;
+	t_list	*head;
+	t_list	*cursor;
+	int		sizelength;
+	DIR		*dirp;
 
 	head = NULL;
 	cursor = NULL;
