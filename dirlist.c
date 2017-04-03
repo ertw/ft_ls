@@ -1,9 +1,8 @@
 #include "ft_ls.h"
 #define IS_TAIL !cursor->next
 #define IS_HEAD cursor == head
+#define CONT(node098gh) ((t_container*)node098gh->content)
 #define CONT_DIRENT ((t_container*)cursor->content)->s_dirent
-#define CONT_DIRENT_D_NAME ((t_container*)cursor->content)->s_dirent.d_name
-#define CONT_DIRENT_D_NAME_N ((t_container*)cursor->next->content)->s_dirent.d_name
 #define CONT_S_STAT ((t_container*)cursor->content)->s_stat
 #define CONT_S_STAT_ATIM CONT_S_STAT.st_atim.tv_sec
 #define CONT_S_STAT_MTIM CONT_S_STAT.st_mtim.tv_sec
@@ -12,6 +11,7 @@
 #define CONT_MODE ((t_container*)cursor->content)->mode
 #define CONT_BLOCKS ((t_container*)cursor->content)->blocks
 #define CONT_NLINKS ((t_container*)cursor->content)->nlinks
+#define METADATA ((t_container*)head->content)->metadata
 #define MAX_USERNAME_LEN 33
 #define MAX_GROUPNAME_LEN 33
 
@@ -20,18 +20,25 @@
 //	printf("group: %s\n", grp->gr_name);
 //	printf("username: %s\n", pwd->pw_name);
 
+typedef struct			s_metadata
+{
+	uintmax_t		maxsize;			//largest file, for printf width
+	quad_t			totalblocks;			//sum of blocks
+}				t_metadata;
+
 typedef struct			s_container
 {
-	struct dirent		s_dirent;
-	struct stat		s_stat;
+	struct dirent		s_dirent;			// removeme!
+	struct stat		s_stat;				// removeme!
 	char			username[MAX_USERNAME_LEN];
 	char			groupname[MAX_GROUPNAME_LEN];
 	uid_t			uid;
-	gid_t			gid;
-	mode_t			mode;
-	nlink_t			nlinks;
-	quad_t			blocks;
-	struct s_container	*next;
+	gid_t			gid;				
+	mode_t			mode;				
+	nlink_t			nlinks;				// number of links
+	quad_t			blocks;				// blocks of the file
+	off_t			size;				// bytes of file
+	t_metadata		*metadata;
 }				t_container;
 
 void		lst_inst_node(t_list **alst, t_list *node)
@@ -85,31 +92,62 @@ void		set_nlinks(t_container *cont, struct stat *stats)
 	cont->nlinks = stats->st_nlink;
 }
 
-void		set_g_blocks(t_container *cont, struct stat *stats)
+void		set_blocks(t_container *cont, struct stat *stats)
 {
 	cont->blocks = stats->st_blocks;
 }
 
+void		set_metadata(t_container *cont, t_metadata *metadata)
+{
+	cont->metadata = metadata;
+}
+
+void		set_blocks_meta(t_container *cont)
+{
+	cont->metadata->totalblocks += cont->blocks;
+}
+
+void		set_size(t_container *cont, struct stat *stats)
+{
+	cont->size = stats->st_size;
+}
+
+void		set_maxsize_meta(t_container *cont)
+{
+	if (cont->size > cont->metadata->maxsize)
+		cont->metadata->maxsize = cont->size;
+}
+
 /* this will create each node*/
-t_list		*make_lst(struct dirent *dptr)
+t_list		*lst_make_node(struct dirent *dptr, t_metadata *metadata)
 {
 	t_list		*node;
 	t_container	cont;
 	DIR		*dirp;
 	struct stat	stats;
 
-//	printf("block %ld\n", stats.st_blocks);
 	ft_memmove(&cont.s_dirent, dptr, sizeof(*dptr));
 	stat(dptr->d_name, &stats);
 	ft_memmove(&cont.s_stat, &stats, sizeof(stats));
+	set_metadata(&cont, metadata);
 	set_uid(&cont, &stats);
 	set_gid(&cont, &stats);
 	set_username(&cont);
 	set_groupname(&cont);
 	set_mode(&cont, &stats);
 	set_nlinks(&cont, &stats);
-	set_g_blocks(&cont, &stats);
+	set_blocks(&cont, &stats);
+	set_blocks_meta(&cont);
+	set_maxsize_meta(&cont);
 	return (ft_lstnew(&cont, sizeof(cont)));
+}
+
+t_metadata	*init_metadata(t_metadata *metadata)
+{
+	metadata = ft_memalloc(sizeof(metadata));
+	metadata->totalblocks = 0;
+	metadata->maxsize = 0;
+	return (metadata);
 }
 
 /* loop through the directory and sort*/
@@ -118,7 +156,8 @@ t_list		*read_dir(void)
 	t_list		*head, *cursor;
 	struct dirent	*dptr;
 	DIR		*dirp;
-
+	t_metadata	*metadata;
+	metadata = init_metadata(metadata);
 	head = NULL;
 	cursor = NULL;
 	dirp = opendir(".");
@@ -126,20 +165,20 @@ t_list		*read_dir(void)
 	{
 		while (cursor)
 		{
-			if (IS_HEAD && (ft_strcmp(CONT_DIRENT_D_NAME, dptr->d_name) > 0))
+			if (IS_HEAD && (ft_strcmp(CONT(cursor)->s_dirent.d_name, dptr->d_name) > 0))
 			{
-				lst_inst_node(&head, make_lst(dptr));
+				lst_inst_node(&head, lst_make_node(dptr, metadata));
 				break;
 			}
-			else if (IS_TAIL || (ft_strcmp(CONT_DIRENT_D_NAME_N, dptr->d_name) > 0))
+			else if (IS_TAIL || (ft_strcmp(CONT(cursor->next)->s_dirent.d_name, dptr->d_name) > 0))
 			{
-				lst_inst_node(&cursor->next, make_lst(dptr));
+				lst_inst_node(&cursor->next, lst_make_node(dptr, metadata));
 				break;
 			}
 			cursor = cursor->next;
 		}
 		if (!head)
-			head = make_lst(dptr);
+			head = lst_make_node(dptr, metadata);
 		cursor = head;
 	}
 	closedir(dirp);
@@ -158,8 +197,8 @@ void		lst_del(t_list *head)
 	while (cursor)
 	{
 		tmp = cursor->next;
-		free(cursor->content);
-		free(cursor);
+		ft_memdel((void**)&cursor->content);
+		ft_memdel((void**)&cursor);
 		cursor = tmp;
 	}
 }
@@ -185,49 +224,37 @@ void		print_permissions(t_list *cursor)
 		printf((CONT_MODE & S_IXOTH) ? "t" : "T");
 	else
 		printf((CONT_MODE & S_IXOTH) ? "x" : "-");
-
 }
 
 quad_t		get_total_blocks(t_list *head)
 {
-	t_list	*cursor;
-	quad_t	blocks;
-
-	cursor = head;
-	blocks = 0;
-	while (cursor)
-	{
-		blocks += CONT_BLOCKS;
-		cursor = cursor->next;
-	}
-	return (blocks / BLOCK_DIVISOR);
+	return (CONT(head)->metadata->totalblocks / BLOCK_DIVISOR);
 }
 
 int		main(void)
 {
 	char	timestr[13];
-
 	t_list	*head, *cursor;
+	int	sizelength;
 
 	head = NULL;
 	cursor = NULL;
 	head = read_dir();
 	cursor = head;
-//	memmove(timestr, ctime(&CONT_S_STAT_ATIM), 26);
-//	write(1, timestr + 4, 12);
-	printf("Total %.Lf\n", get_total_blocks(head));
+	sizelength = 1 + ft_countplaces(CONT(head)->metadata->maxsize, 10);	// calc width for printing bytes
+	printf("total %.Lf\n", get_total_blocks(head));
 	while (cursor)
 	{
-		printf("Blox: %.Lf ", CONT_BLOCKS);
 		print_permissions(cursor);
-		printf(" %d ", CONT_NLINKS);
+		printf(" %lu ", CONT_NLINKS);
 		printf("%s ", CONT_USERNAME);
-		printf("%s ", CONT_GROUPNAME);
-		printf("% 7lld ", CONT_S_STAT.st_size);
-		strncpy(timestr, ctime(&CONT_S_STAT_CTIM) + 4, 12);
+		printf("%s", CONT_GROUPNAME);
+		printf("% *ld ", sizelength, CONT_S_STAT.st_size);
+		strncpy(timestr, ctime(&CONT_S_STAT_CTIM) + 4, 12);		// format time string
 		printf("%s ", timestr);
-		printf("%s \n", CONT_DIRENT_D_NAME);
+		printf("%s \n", CONT(cursor)->s_dirent.d_name);
 		cursor = cursor->next;
 	}
+	ft_memdel((void**)&METADATA);
 	lst_del(head);
 }

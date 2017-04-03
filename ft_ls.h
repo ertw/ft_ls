@@ -12,7 +12,6 @@
 
 #ifndef FTLS_H
 # define FTLS_H
-
 # include "./libft/libft.h"
 # include <dirent.h>
 # include <stdio.h>
@@ -20,6 +19,7 @@
 # include <grp.h>
 # include <pwd.h>
 # include <sys/stat.h>
+# include <inttypes.h>
 #endif
 
 #ifndef quad_t

@@ -35,6 +35,7 @@ t_opts			parseflags(char *flags)
 	opts.t = 0;
 	return (opts);
 }
+
 t_list			*processinput(int ac, char **av)
 {
 	unsigned short	arg = 1;
