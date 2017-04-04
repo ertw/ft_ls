@@ -258,7 +258,10 @@ t_list					*processinput(int ac, char **av)
 	t_list			*head;
 	t_list			*cursor;
 	t_container		cont;
+	t_metadata	*metadata;
+	DIR			*dirp;
 
+	metadata = init_metadata(metadata);
 	arg = 1;
 	head = NULL;
 	cursor = NULL;
@@ -272,40 +275,46 @@ t_list					*processinput(int ac, char **av)
 	}
 	while (arg < ac)
 	{
-//		ft_bzero(input.name, 256);
-		ft_memmove(CONT(cursor)->s_dirent.d_name, av[arg], ft_strlen(av[arg]));
-		if (cursor)
-		{
-//			cursor->next = ft_lstnew(&cont, sizeof(cont));
-			cursor->next = lst_make_node(dptr, metadata);
-			cursor = cursor->next;
-		}
+		if (!(dirp = opendir(av[arg])))
+			dprintf(2, "%s: No such file or directory\n", (av[arg]));
 		else
 		{
-//			head = ft_lstnew(&cont, sizeof(cont));
-			head = lst_make_node(dptr, metadata);
-			cursor = head;
 		}
+////		ft_bzero(input.name, 256);
+////		ft_memmove(CONT(cursor)->s_dirent.d_name, av[arg], ft_strlen(av[arg]));
+//		if (cursor)
+//		{
+////			cursor->next = ft_lstnew(&cont, sizeof(cont));
+//			cursor->next = lst_make_node(dptr, metadata);
+//			cursor = cursor->next;
+//		}
+//		else
+//		{
+////			head = ft_lstnew(&cont, sizeof(cont));
+//			head = lst_make_node(dptr, metadata);
+//			cursor = head;
+//		}
 		++arg;
 	}
 	return (head);
 }
 
-int						main(void)
-{
-	char	timestr[13];
-	t_list	*head;
-	t_list	*cursor;
-	int		sizelength;
-	DIR		*dirp;
+typedef char	timestr[13];
 
-	head = NULL;
-	cursor = NULL;
-	dirp = opendir(".");
-	head = read_dir(dirp);
-	closedir(dirp);
-	cursor = head;
+unsigned int					get_size_length(t_list *head)
+{
+	int		sizelength;
+
 	sizelength = 1 + ft_countplaces(CONT(head)->metadata->maxsize, 10);	// calc width for printing bytes
+	return (sizelength);
+}
+
+void						print_ls_l(t_list *head)
+{
+	t_list	*cursor;
+	char timestr[13];
+
+	cursor = head;
 	printf("total %.Lf\n", get_total_blocks(head));
 	while (cursor)
 	{
@@ -313,12 +322,28 @@ int						main(void)
 		printf(" %lu ", CONT_NLINKS);
 		printf("%s ", CONT_USERNAME);
 		printf("%s", CONT_GROUPNAME);
-		printf("% *ld ", sizelength, CONT_S_STAT.st_size);
+		printf("% *ld ", get_size_length(head), CONT_S_STAT.st_size);
 		strncpy(timestr, ctime(&CONT_S_STAT_CTIM) + 4, 12);		// format time string
 		printf("%s ", timestr);
 		printf("%s \n", CONT(cursor)->s_dirent.d_name);
 		cursor = cursor->next;
 	}
+}
+
+int						main(void)
+{
+	t_list	*head;
+	DIR		*dirp;
+
+	head = NULL;
+	if (!(dirp = opendir(".")))
+	{
+		dprintf(2, "%s: No such file or directory\n", ".");
+		exit(1);
+	}
+	head = read_dir(dirp);
+	closedir(dirp);
+	print_ls_l(head);
 	ft_memdel((void**)&METADATA);
 	lst_del(head);
 }
