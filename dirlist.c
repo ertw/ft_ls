@@ -23,7 +23,7 @@ typedef struct			s_metadata
 
 typedef struct			s_container
 {
-	struct dirent		s_dirent;			// removeme!
+	struct dirent		s_dirent;				// removeme!
 	struct stat			s_stat;				// removeme!
 	char				username[MAX_USERNAME_LEN];
 	char				groupname[MAX_GROUPNAME_LEN];
@@ -34,6 +34,7 @@ typedef struct			s_container
 	quad_t				blocks;				// blocks of the file
 	off_t				size;				// bytes of file
 	t_metadata			*metadata;
+	struct s_container	*next;					// if dir, use this to get next list
 }						t_container;
 
 void					lst_inst_node(t_list **alst, t_list *node)
@@ -57,8 +58,8 @@ void					set_groupname(t_container *cont)
 {
 	struct group	*grp;
 
-	grp = getgrgid(cont->gid);
-	ft_memmove(cont->groupname, grp->gr_name, sizeof(grp->gr_name));
+	if (grp = getgrgid(cont->gid))
+		ft_memmove(cont->groupname, grp->gr_name, sizeof(grp->gr_name));
 }
 
 void					set_username(t_container *cont)
@@ -299,8 +300,6 @@ t_list					*processinput(int ac, char **av)
 	return (head);
 }
 
-typedef char	timestr[13];
-
 unsigned int					get_size_length(t_list *head)
 {
 	int		sizelength;
@@ -312,7 +311,7 @@ unsigned int					get_size_length(t_list *head)
 void						print_ls_l(t_list *head)
 {
 	t_list	*cursor;
-	char timestr[13];
+	static char timestr[13];
 
 	cursor = head;
 	printf("total %.Lf\n", get_total_blocks(head));
@@ -323,7 +322,7 @@ void						print_ls_l(t_list *head)
 		printf("%s ", CONT_USERNAME);
 		printf("%s", CONT_GROUPNAME);
 		printf("% *ld ", get_size_length(head), CONT_S_STAT.st_size);
-		strncpy(timestr, ctime(&CONT_S_STAT_CTIM) + 4, 12);		// format time string
+		ft_strncpy(timestr, ctime(&CONT_S_STAT_CTIM) + 4, 12);		// format time string
 		printf("%s ", timestr);
 		printf("%s \n", CONT(cursor)->s_dirent.d_name);
 		cursor = cursor->next;
@@ -336,7 +335,7 @@ int						main(void)
 	DIR		*dirp;
 
 	head = NULL;
-	if (!(dirp = opendir(".")))
+	if (!(dirp = opendir("./")))
 	{
 		dprintf(2, "%s: No such file or directory\n", ".");
 		exit(1);
