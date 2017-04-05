@@ -5,9 +5,10 @@
 !_TAG_PROGRAM_NAME	Universal Ctags	/Derived from Exuberant Ctags/
 !_TAG_PROGRAM_URL	https://ctags.io/	/official site/
 !_TAG_PROGRAM_VERSION	0.0.0	/3a7e0bb9/
-$(NAME)	libft/Makefile	/^$(NAME):$/;"	t
+$(NAME)	libft/Makefile	/^$(NAME): $(OBJECTS)$/;"	t
+%.o	libft/Makefile	/^%.o: %.c$/;"	t
 BLOCK_DIVISOR	ft_ls.h	/^# define BLOCK_DIVISOR /;"	d
-CFLAGS	libft/Makefile	/^CFLAGS = -Wall -Werror -Wextra -g #-O3 #-fsanitize=address$/;"	m
+CFLAGS	libft/Makefile	/^CFLAGS = -Wall -Werror -Wextra -g #-fsanitize=address$/;"	m
 CONT	dirlist.c	/^#define CONT(/;"	d	file:
 CONT_BLOCKS	dirlist.c	/^#define CONT_BLOCKS /;"	d	file:
 CONT_DIRENT	dirlist.c	/^#define CONT_DIRENT /;"	d	file:
@@ -35,9 +36,8 @@ MAX_USERNAME_LEN	dirlist.c	/^#define MAX_USERNAME_LEN /;"	d	file:
 META	recurse.c	/^#define META /;"	d	file:
 METADATA	dirlist.c	/^#define METADATA /;"	d	file:
 NAME	libft/Makefile	/^NAME = libft.a$/;"	m
-OFILES	libft/Makefile	/^OFILES = \\$/;"	m
+OBJECTS	libft/Makefile	/^OBJECTS = \\$/;"	m
 R	ft_ls.c	/^	int					R;$/;"	m	struct:s_opts	typeref:typename:int	file:
-TEST_O	libft/Makefile	/^TEST_O = test.o$/;"	m
 all	libft/Makefile	/^all: $(NAME)$/;"	t
 blocks	dirlist.c	/^	quad_t				blocks;				\/\/ blocks of the file$/;"	m	struct:s_container	typeref:typename:quad_t	file:
 char_to_int	libft/ft_atoi.c	/^static int	char_to_int(char c)$/;"	f	typeref:typename:int	file:
@@ -122,7 +122,9 @@ ft_strtrim	libft/ft_strtrim.c	/^char	*ft_strtrim(char const *s)$/;"	f	typeref:ty
 ft_strwjoin	libft/ft_strwjoin.c	/^int	ft_strwjoin(char **old, const char *new, int len)$/;"	f	typeref:typename:int
 ft_tolower	libft/ft_tolower.c	/^int	ft_tolower(int c)$/;"	f	typeref:typename:int
 ft_toupper	libft/ft_toupper.c	/^int	ft_toupper(int c)$/;"	f	typeref:typename:int
+ft_wctomb	libft/ft_wctomb.c	/^int		ft_wctomb(char *s, wchar_t wchar)$/;"	f	typeref:typename:int
 ft_wordcount	libft/ft_wordcount.c	/^unsigned int	ft_wordcount(const char *s, const char c, unsigned int count)$/;"	f	typeref:typename:unsigned int
+ft_wstrlen	libft/ft_wstrlen.c	/^size_t	ft_wstrlen(const wchar_t *ws)$/;"	f	typeref:typename:size_t
 get_size_length	dirlist.c	/^unsigned int					get_size_length(t_list *head)$/;"	f	typeref:typename:unsigned int
 get_total_blocks	dirlist.c	/^quad_t					get_total_blocks(t_list *head)$/;"	f	typeref:typename:quad_t
 gid	dirlist.c	/^	gid_t				gid;$/;"	m	struct:s_container	typeref:typename:gid_t	file:
@@ -205,7 +207,8 @@ t_metadata	recurse.c	/^}			t_metadata;$/;"	t	typeref:struct:s_metadata	file:
 t_opts	ft_ls.c	/^}						t_opts;$/;"	t	typeref:struct:s_opts	file:
 t_vec	libft/libft.h	/^}					t_vec;$/;"	t	typeref:struct:s_vec
 testprint	recurse.c	/^void			testprint(t_list *head)$/;"	f	typeref:typename:void
-tests	libft/Makefile	/^tests: $(NAME)$/;"	t
 totalblocks	dirlist.c	/^	quad_t				totalblocks;			\/\/sum of blocks$/;"	m	struct:s_metadata	typeref:typename:quad_t	file:
 uid	dirlist.c	/^	uid_t				uid;$/;"	m	struct:s_container	typeref:typename:uid_t	file:
 username	dirlist.c	/^	char				username[MAX_USERNAME_LEN];$/;"	m	struct:s_container	typeref:typename:char[]	file:
+wstrbytelen	libft/wstrbytelen.c	/^int		wstrbytelen(const wchar_t *ws)$/;"	f	typeref:typename:int
+wstrtombstr	libft/wstrtombstr.c	/^int		wstrtombstr(char *dst, const wchar_t *ws)$/;"	f	typeref:typename:int
