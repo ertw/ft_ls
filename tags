@@ -20,7 +20,8 @@ CONT_S_STAT_ATIM	dirlist.c	/^#define CONT_S_STAT_ATIM /;"	d	file:
 CONT_S_STAT_CTIM	ft_ls.h	/^# define CONT_S_STAT_CTIM /;"	d
 CONT_S_STAT_MTIM	dirlist.c	/^#define CONT_S_STAT_MTIM /;"	d	file:
 CONT_USERNAME	dirlist.c	/^#define CONT_USERNAME /;"	d	file:
-DIRECTORY	recurse.c	/^#define DIRECTORY /;"	d	file:
+C_DIRE	recurse.c	/^#define C_DIRE(/;"	d	file:
+C_META	recurse.c	/^#define C_META(/;"	d	file:
 FTLS_H	ft_ls.h	/^# define FTLS_H$/;"	d
 IS_HEAD	dirlist.c	/^#define IS_HEAD /;"	d	file:
 IS_HEAD	ft_ls.c	/^#define IS_HEAD /;"	d	file:
@@ -33,7 +34,6 @@ IS_TAIL	recurse.c	/^#define IS_TAIL /;"	d	file:
 LIBFT_H	libft/libft.h	/^# define LIBFT_H$/;"	d
 MAX_GROUPNAME_LEN	dirlist.c	/^#define MAX_GROUPNAME_LEN /;"	d	file:
 MAX_USERNAME_LEN	dirlist.c	/^#define MAX_USERNAME_LEN /;"	d	file:
-META	recurse.c	/^#define META /;"	d	file:
 METADATA	dirlist.c	/^#define METADATA /;"	d	file:
 NAME	libft/Makefile	/^NAME = libft.a$/;"	m
 OBJECTS	libft/Makefile	/^OBJECTS = \\$/;"	m
@@ -44,6 +44,7 @@ char_to_int	libft/ft_atoi.c	/^static int	char_to_int(char c)$/;"	f	typeref:typen
 clean	libft/Makefile	/^clean:$/;"	t
 content	libft/libft.h	/^	void			*content;$/;"	m	struct:s_list	typeref:typename:void *
 content_size	libft/libft.h	/^	size_t			content_size;$/;"	m	struct:s_list	typeref:typename:size_t
+directory	recurse.c	/^	t_list		*directory;		\/\/ directory list associated with this meta list$/;"	m	struct:s_metadata	typeref:typename:t_list *	file:
 fclean	libft/Makefile	/^fclean: clean$/;"	t
 ft_abs	libft/ft_abs.c	/^unsigned int	ft_abs(int n)$/;"	f	typeref:typename:unsigned int
 ft_atoi	libft/ft_atoi.c	/^int			ft_atoi(const char *str)$/;"	f	typeref:typename:int
@@ -92,6 +93,7 @@ ft_strcat	libft/ft_strcat.c	/^char	*ft_strcat(char *s1, const char *s2)$/;"	f	ty
 ft_strchr	libft/ft_strchr.c	/^char	*ft_strchr(const char *s, int c)$/;"	f	typeref:typename:char *
 ft_strclr	libft/ft_strclr.c	/^void	ft_strclr(char *s)$/;"	f	typeref:typename:void
 ft_strcmp	libft/ft_strcmp.c	/^int	ft_strcmp(const char *s1, const char *s2)$/;"	f	typeref:typename:int
+ft_strconcat	recurse.c	/^char			*ft_strconcat(const int num, ...)$/;"	f	typeref:typename:char *
 ft_strcpy	libft/ft_strcpy.c	/^char	*ft_strcpy(char *dst, const char *src)$/;"	f	typeref:typename:char *
 ft_strdel	libft/ft_strdel.c	/^void	ft_strdel(char **as)$/;"	f	typeref:typename:void
 ft_strdup	libft/ft_strdup.c	/^char	*ft_strdup(const char *s1)$/;"	f	typeref:typename:char *
@@ -130,7 +132,6 @@ get_total_blocks	dirlist.c	/^quad_t					get_total_blocks(t_list *head)$/;"	f	typ
 gid	dirlist.c	/^	gid_t				gid;$/;"	m	struct:s_container	typeref:typename:gid_t	file:
 groupname	dirlist.c	/^	char				groupname[MAX_GROUPNAME_LEN];$/;"	m	struct:s_container	typeref:typename:char[]	file:
 head	ft_ls.c	/^	t_list			*head;$/;"	m	struct:s_input	typeref:typename:t_list *	file:
-head	recurse.c	/^	t_list		*head;$/;"	m	struct:s_metadata	typeref:typename:t_list *	file:
 init_metadata	dirlist.c	/^t_metadata				*init_metadata(t_metadata *metadata)$/;"	f	typeref:typename:t_metadata *
 is_sign	libft/ft_atoi.c	/^static int	is_sign(char c)$/;"	f	typeref:typename:int	file:
 is_str_in_str	libft/ft_strstr.c	/^static int	is_str_in_str(const char *s, const char *find)$/;"	f	typeref:typename:int	file:
@@ -138,30 +139,36 @@ is_str_in_strn	libft/ft_strnstr.c	/^static int	is_str_in_strn(const char *s, con
 l	ft_ls.c	/^	int					l;$/;"	m	struct:s_opts	typeref:typename:int	file:
 len	libft/libft.h	/^	size_t			len;$/;"	m	struct:s_vec	typeref:typename:size_t
 lst_del	dirlist.c	/^void					lst_del(t_list *head)$/;"	f	typeref:typename:void
-lst_del_directory	recurse.c	/^void					lst_del_directory(void *content, size_t sizeofcontent)$/;"	f	typeref:typename:void
-lst_del_meta	recurse.c	/^void					lst_del_meta(void *content, size_t sizeofcontent)$/;"	f	typeref:typename:void
+lst_del_directory	recurse.c	/^void			lst_del_directory(void *content, size_t sizeofcontent)$/;"	f	typeref:typename:void
+lst_del_meta	recurse.c	/^void			lst_del_meta(void *content, size_t sizeofcontent)$/;"	f	typeref:typename:void
 lst_insert	ft_ls.c	/^void		lst_insert(t_list **alst, void *content, size_t size)$/;"	f	typeref:typename:void
 lst_insert	numlist.c	/^void		lst_insert(t_list **alst, void *content, size_t size)$/;"	f	typeref:typename:void
 lst_inst_node	dirlist.c	/^void					lst_inst_node(t_list **alst, t_list *node)$/;"	f	typeref:typename:void
+lst_inst_node	recurse.c	/^void			lst_inst_node(t_list **alst, t_list *node)$/;"	f	typeref:typename:void
 lst_make_node	dirlist.c	/^t_list					*lst_make_node(struct dirent *dptr, t_metadata *metadata)$/;"	f	typeref:typename:t_list *
-lst_makenode_directory	recurse.c	/^t_list					*lst_makenode_directory(char *name)$/;"	f	typeref:typename:t_list *
-lst_makenode_meta	recurse.c	/^t_list					*lst_makenode_meta(char *name)$/;"	f	typeref:typename:t_list *
+lst_makelst_directory	recurse.c	/^t_list			*lst_makelst_directory(DIR *dirp, t_list *parent_meta)$/;"	f	typeref:typename:t_list *
+lst_makenode_directory	recurse.c	/^t_list			*lst_makenode_directory(struct dirent *dptr, t_list *parent_meta)$/;"	f	typeref:typename:t_list *
+lst_makenode_meta	recurse.c	/^t_list			*lst_makenode_meta(char *name)$/;"	f	typeref:typename:t_list *
 main	dirlist.c	/^int						main(void)$/;"	f	typeref:typename:int
 main	ft_ls.c	/^int			main(int ac, char **av)$/;"	f	typeref:typename:int
 main	numlist.c	/^int		main(int ac, char **av)$/;"	f	typeref:typename:int
 main	recurse.c	/^int			main(int ac, char **av)$/;"	f	typeref:typename:int
 maxsize	dirlist.c	/^	uintmax_t			maxsize;			\/\/largest file, for printf width$/;"	m	struct:s_metadata	typeref:typename:uintmax_t	file:
+maxsize	recurse.c	/^	uintmax_t	maxsize;		\/\/ bytes of largest file in dir$/;"	m	struct:s_metadata	typeref:typename:uintmax_t	file:
 metadata	dirlist.c	/^	t_metadata			*metadata;$/;"	m	struct:s_container	typeref:typename:t_metadata *	file:
+metadata	recurse.c	/^	t_list		*metadata;$/;"	m	struct:s_directory	typeref:typename:t_list *	file:
 mode	dirlist.c	/^	mode_t				mode;$/;"	m	struct:s_container	typeref:typename:mode_t	file:
 name	ft_ls.c	/^	char			name[256];$/;"	m	struct:s_input	typeref:typename:char[256]	file:
-name	recurse.c	/^	char		*name;			\/\/ path and name of file$/;"	m	struct:s_directory	typeref:typename:char *	file:
 next	dirlist.c	/^	struct s_container	*next;					\/\/ if dir, use this to get next list$/;"	m	struct:s_container	typeref:struct:s_container *	file:
 next	libft/libft.h	/^	struct s_list	*next;$/;"	m	struct:s_list	typeref:struct:s_list *
+next	recurse.c	/^	t_list		*next;			\/\/ next meta list, if any$/;"	m	struct:s_metadata	typeref:typename:t_list *	file:
 nlinks	dirlist.c	/^	nlink_t				nlinks;				\/\/ number of links$/;"	m	struct:s_container	typeref:typename:nlink_t	file:
 parseflags	ft_ls.c	/^t_opts			parseflags(char *flags)$/;"	f	typeref:typename:t_opts
 path	recurse.c	/^	char		*path;			\/\/ path to here$/;"	m	struct:s_metadata	typeref:typename:char *	file:
 print_ls_l	dirlist.c	/^void						print_ls_l(t_list *head)$/;"	f	typeref:typename:void
 print_permissions	dirlist.c	/^void					print_permissions(t_list *cursor)$/;"	f	typeref:typename:void
+printdirectory	recurse.c	/^void			printdirectory(t_list *head_dir, t_list *parent_meta)$/;"	f	typeref:typename:void
+printmeta	recurse.c	/^void			printmeta(t_list *head_meta)$/;"	f	typeref:typename:void
 processfiles	dirlist.c	/^t_list					*processfiles(t_list *head)$/;"	f	typeref:typename:t_list *
 processfiles	ft_ls.c	/^t_list			*processfiles(t_list *head)$/;"	f	typeref:typename:t_list *
 processinput	dirlist.c	/^t_list					*processinput(int ac, char **av)$/;"	f	typeref:typename:t_list *
@@ -176,15 +183,18 @@ readfiles	ft_ls.c	/^void			readfiles(DIR *dirp)$/;"	f	typeref:typename:void
 s_container	dirlist.c	/^typedef struct			s_container$/;"	s	file:
 s_directory	recurse.c	/^typedef struct		s_directory$/;"	s	file:
 s_dirent	dirlist.c	/^	struct dirent		s_dirent;				\/\/ removeme!$/;"	m	struct:s_container	typeref:struct:dirent	file:
+s_dirent	recurse.c	/^	struct dirent	s_dirent;$/;"	m	struct:s_directory	typeref:struct:dirent	file:
 s_input	ft_ls.c	/^typedef struct			s_input$/;"	s	file:
 s_list	libft/libft.h	/^typedef struct		s_list$/;"	s
 s_metadata	dirlist.c	/^typedef struct			s_metadata$/;"	s	file:
 s_metadata	recurse.c	/^typedef struct		s_metadata$/;"	s	file:
 s_opts	ft_ls.c	/^typedef struct			s_opts$/;"	s	file:
 s_stat	dirlist.c	/^	struct stat			s_stat;				\/\/ removeme!$/;"	m	struct:s_container	typeref:struct:stat	file:
+s_stats	recurse.c	/^	struct stat	s_stats;$/;"	m	struct:s_directory	typeref:struct:stat	file:
 s_vec	libft/libft.h	/^typedef struct		s_vec$/;"	s
 set_blocks	dirlist.c	/^void					set_blocks(t_container *cont, struct stat *stats)$/;"	f	typeref:typename:void
 set_blocks_meta	dirlist.c	/^void					set_blocks_meta(t_container *cont)$/;"	f	typeref:typename:void
+set_dir	recurse.c	/^t_list			*set_dir(t_list *parent_meta)$/;"	f	typeref:typename:t_list *
 set_gid	dirlist.c	/^void					set_gid(t_container *cont, struct stat *stats)$/;"	f	typeref:typename:void
 set_groupname	dirlist.c	/^void					set_groupname(t_container *cont)$/;"	f	typeref:typename:void
 set_maxsize_meta	dirlist.c	/^void					set_maxsize_meta(t_container *cont)$/;"	f	typeref:typename:void
@@ -206,8 +216,8 @@ t_metadata	dirlist.c	/^}						t_metadata;$/;"	t	typeref:struct:s_metadata	file:
 t_metadata	recurse.c	/^}			t_metadata;$/;"	t	typeref:struct:s_metadata	file:
 t_opts	ft_ls.c	/^}						t_opts;$/;"	t	typeref:struct:s_opts	file:
 t_vec	libft/libft.h	/^}					t_vec;$/;"	t	typeref:struct:s_vec
-testprint	recurse.c	/^void			testprint(t_list *head)$/;"	f	typeref:typename:void
 totalblocks	dirlist.c	/^	quad_t				totalblocks;			\/\/sum of blocks$/;"	m	struct:s_metadata	typeref:typename:quad_t	file:
+totalblocks	recurse.c	/^	quad_t		totalblocks;		\/\/ blockcount of dir$/;"	m	struct:s_metadata	typeref:typename:quad_t	file:
 uid	dirlist.c	/^	uid_t				uid;$/;"	m	struct:s_container	typeref:typename:uid_t	file:
 username	dirlist.c	/^	char				username[MAX_USERNAME_LEN];$/;"	m	struct:s_container	typeref:typename:char[]	file:
 wstrbytelen	libft/wstrbytelen.c	/^int		wstrbytelen(const wchar_t *ws)$/;"	f	typeref:typename:int
