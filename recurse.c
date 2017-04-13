@@ -1,21 +1,10 @@
 #include "ft_ls.h"
-#include <stdarg.h>
 #define IS_TAIL !cursor->next
 #define IS_HEAD cursor == head
-#define C_DIRE(node239) ((t_directory*)node239->content)
-#define C_META(node098) ((t_metadata*)node098->content)
+#define C_DIR(node239) ((t_directory*)node239->content)
+#define C_MET(node098) ((t_metadata*)node098->content)
 
-/*
- * read in a path from the read stack
- * if it's a file, print it
- * if it's a dir, print every file in it
- * 	if any file is a directory, add it to the read stack
- * if it's something else, gracefully error
-*/
-
-//((t_metadata*)parent_meta->content)->totalblocks += stats.st_blocks
-//((t_metadata*)parent_meta->content)->maxsize
-
+/* holds information about a file or directory */
 typedef struct		s_directory
 {
 	struct stat	s_stats;
@@ -23,10 +12,11 @@ typedef struct		s_directory
 	t_list		*metadata;
 }			t_directory;
 
+/* holds information about a list of files and directories */
 typedef struct		s_metadata
 {
 	char		*path;			// path to here
-	uintmax_t	maxsize;		// bytes of largest file in dir
+	intmax_t	maxsize;		// bytes of largest file in dir
 	quad_t		totalblocks;		// blockcount of dir
 	t_list		*next;			// next meta list, if any
 	t_list		*directory;		// directory list associated with this meta list
@@ -35,209 +25,170 @@ typedef struct		s_metadata
 /* delete each list node */
 void			lst_del_directory(void *content, size_t sizeofcontent)
 {
-//	ft_strdel(&((t_metadata*)content)->path);
+	if (!sizeofcontent)
+	{
+		;
+	}
 	ft_memdel((void**)(t_directory*)&content);
 }
 
-/* delete each list node */
+/* delete each meta node */
 void			lst_del_meta(void *content, size_t sizeofcontent)
 {
+	if (!sizeofcontent)
+	{
+		;
+	}
 	ft_lstdel(&((t_metadata*)content)->directory, &lst_del_directory);
 	ft_strdel(&((t_metadata*)content)->path);
 	ft_memdel((void**)(t_metadata*)&content);
 }
 
-/* create each directory node */
-t_list			*lst_makenode_directory(struct dirent *dptr, t_list *parent_meta)
+/* manually create a meta */
+
+/* recursively create the list */
+t_list			*lst_dir_make(DIR *dirp)
 {
-	t_list		*node;
+	t_list		*node = NULL;
+	struct dirent	*direntptr;
 	t_directory	directory;
-	struct stat	stats;
 
-	ft_bzero(&stats, sizeof(stats));
-	ft_memmove(&directory.s_dirent, dptr, sizeof(*dptr));
-	stat(dptr->d_name, &stats);
-	ft_memmove(&directory.s_stats, &stats, sizeof(stats));
-	directory.metadata = parent_meta;
-	C_META(parent_meta)->totalblocks += stats.st_blocks;
-	if (stats.st_size > C_META(parent_meta)->maxsize)
-		C_META(parent_meta)->maxsize = stats.st_size;
-	return (ft_lstnew(&directory, sizeof(directory)));
+	if (!(direntptr = readdir(dirp)))
+		return (NULL);
+	{
+		stat(direntptr->d_name, &directory.s_stats);
+		ft_memmove(&directory.s_dirent, direntptr, sizeof(*direntptr));
+		node = ft_lstnew(&directory, sizeof(directory));
+		node->next = lst_dir_make(dirp);
+	}
+	return (node);
 }
 
-void			lst_inst_node(t_list **alst, t_list *node)
+/* print out each node's word */
+void			lst_node_print(t_list *node)
 {
-	t_list	*tmp;
-
-	tmp = *alst;
-	*alst = node;
-	(*alst)->next = tmp;
+	printf("%s\n", C_DIR(node)->s_dirent.d_name);
 }
 
-//int			ft_compare(const void *item1, size_t size1, const void *item2, size_t size2, void (*sorter)(void*, void*))
-//{
-//	return (ft_memcmp(item1, item2));
-//}
-
-t_list			*lst_makelst_directory(DIR *dirp, t_list *parent_meta)
+/* delete each list node */
+void			lst_del_content(void *content, size_t sizeofcontent)
 {
-	t_list		*head;
+	if (!sizeofcontent)
+	{
+		;
+	}
+	ft_memdel((void**)(t_directory*)&content);
+}
+
+/* put t_list pointers into array */
+t_list			**lst_to_arr(t_list *head)
+{
 	t_list		*cursor;
-	struct dirent	*dptr;
+	int		len;
+	int		i;
+	t_list		**arr;
 
-	head = NULL;
-	cursor = NULL;
-	while ((dptr = readdir(dirp)))
-	{
-		while (cursor)
-		{
-			if (IS_HEAD && (ft_strcmp(C_DIRE(cursor)->s_dirent.d_name, dptr->d_name) > 0))
-			{
-				lst_inst_node(&head, lst_makenode_directory(dptr, parent_meta));
-				break ;
-			}
-			else if (IS_TAIL || (ft_strcmp(C_DIRE(cursor->next)->s_dirent.d_name, dptr->d_name) > 0))
-			{
-				lst_inst_node(&cursor->next, lst_makenode_directory(dptr, parent_meta));
-				break ;
-			}
-			cursor = cursor->next;
-		}
-		if (!head)
-			head = lst_makenode_directory(dptr, parent_meta);
-		cursor = head;
-	}
-	return (head);
-}
-
-/* create a list of files in the directory, add it to meta */
-t_list			*set_dir(t_list *parent_meta)
-{
-	DIR	*dirp;
-	t_list	*head;
-
-	if (!(dirp = opendir(C_META(parent_meta)->path)))
-		dprintf(2, "%s: No such file or directory\n", C_META(parent_meta)->path);
-	else
-	{
-		head = lst_makelst_directory(dirp, parent_meta);
-		closedir(dirp);
-	}
-	return (head);
-}
-
-/* create each metadata node */
-t_list			*lst_makenode_meta(char *name)
-{
-	t_list		*node;
-	t_metadata	meta;
-
-	meta.path = ft_strdup(name);
-	meta.next = NULL;
-	meta.maxsize = 0;
-	meta.totalblocks = 0;
-	return (ft_lstnew(&meta, sizeof(meta)));
-}
-
-char			*ft_strconcat(const int num, ...)
-{
-	va_list	ap;
-	int	n;
-	char	*ret;
-	char	*tmp;
-
-	ret = NULL;
-	n = num;
-	va_start(ap, num);
-	while (n-- > 0)
-	{
-		tmp = va_arg(ap, char*);
-		ft_strnjoin(&ret, tmp, ft_strlen(tmp));
-	}
-	va_end(ap);
-	return (ret);
-}
-
-/* print out each list node */
-void			printdirectory(t_list *head_dir, t_list *parent_meta)
-{
-	t_list	*cursor;
-	t_list	*tmp;
-	char	*path;
-
-	cursor = head_dir;
+	cursor = head;
+	len = 0;
+	i = 0;
 	while (cursor)
 	{
-		printf("%s\n", C_DIRE(cursor)->s_dirent.d_name);
-		printf("%llu\n", C_DIRE(cursor)->s_stats.st_mode);
-		if (S_ISDIR(C_DIRE(cursor)->s_stats.st_mode))
-		{
-			path = ft_strconcat(3, C_META(parent_meta)->path, "/", C_DIRE(cursor)->s_dirent.d_name);
-			printf("<DIRECTORY>: %s\n", path);
-//			parent_meta->next = lst_makenode_meta(path);
-			ft_strdel(&path);
-		}
+		len++;
 		cursor = cursor->next;
+	}
+	cursor = head;
+	arr = ft_memalloc(sizeof(cursor) * (len + 1));
+	while (i < len)
+	{
+		arr[i] = cursor;
+		cursor = cursor->next;
+		i++;
+	}
+	arr[i] = NULL;
+	return (arr);
+}
+
+/* to sort dotfiles, pretend the dot doesn't exist, except for . && .. */
+void				advance_hidden_names(char **str)
+{
+	if (*str[0] == '.')
+	{
+		if (!(*(*str + 1) == '.' || !*(*str + 1)))
+			++*str;
 	}
 }
 
-/* print out each list node */
-void			printmeta(t_list *head_meta)
+/* sort by name, alphabetically */
+int				compare_names_alpha(t_directory *cont1, t_directory *cont2)
 {
-	t_list	*cursor;
+	char	*str1;
+	char	*str2;
 
-	cursor = head_meta;
-	while (cursor)
-	{
-		//printf("%s\n", C_META(cursor)->path);
-		C_META(cursor)->directory = set_dir(cursor);
-		//printf("total: %lf\n", C_META(cursor)->totalblocks);
-		printdirectory(C_META(cursor)->directory, cursor);
-		if (C_META(cursor)->next)
-		{
-			//cursor = C_META(cursor)->next;
-			printf("<NEXT>\n");
-		}
-		cursor = cursor->next;
-	}
-	ft_lstdel(&head_meta, &lst_del_meta);
+	str1 = cont1->s_dirent.d_name;
+	advance_hidden_names(&str1);
+	str2 = cont2->s_dirent.d_name;
+	advance_hidden_names(&str2);
+	return (ft_strcmp(str1, str2));
 }
 
-/* read from arguments */
-t_list			*processinput(int ac, char **av)
+/* sort by name, reverse alphabetically */
+int				compare_names_reverse(t_directory *cont1, t_directory *cont2)
 {
-	unsigned short	arg = 1;
-	t_list		*head = NULL;
-	t_list		*cursor = NULL;
-	t_metadata	meta;
+	char	*str1;
+	char	*str2;
 
-	while (av[arg] && *av[arg] == '-')
+	str1 = cont1->s_dirent.d_name;
+	advance_hidden_names(&str1);
+	str2 = cont2->s_dirent.d_name;
+	advance_hidden_names(&str2);
+	return (ft_strcmp(str2, str1));
+}
+
+/* sort an array of pointers to list nodes */
+void sort_arr_lst(t_list **arr)
+{
+	t_list			*temp;
+	unsigned short i;
+
+	i = 1;
+	while (arr[i])
 	{
-		while (*av[arg]++)
+		if (compare_names_alpha(C_DIR(arr[i]), C_DIR(arr[i - 1])) < 0)
 		{
-			//printf("%c\n", *av[arg]);
-		}
-		++arg;
-	}
-	while (arg < ac)
-	{
-		if (cursor)
-		{
-			cursor->next = lst_makenode_meta(av[arg]);
-			cursor = cursor->next;
+			temp = arr[i - 1];
+			arr[i - 1] = arr[i];
+			arr[i] = temp;
+			i = 1;
 		}
 		else
-		{
-			head = lst_makenode_meta(av[arg]);
-			cursor = head;
-		}
-		++arg;
+			i++;
 	}
-	return (head);
 }
 
-int			main(int ac, char **av)
+int			main(void)
 {
-	printmeta(processinput(ac, av));
-	return (0);
+	t_list		*head;
+	DIR		*dirp;
+	t_list		**arr;
+	int		i = 0;
+	int		len = 0;
+
+	if (!(dirp = opendir(".")))
+		dprintf(2, "%s: No such file or directory\n", "C_META(parent_meta)->path");
+	head = lst_dir_make(dirp);
+	ft_memdel((void*)&dirp);
+//	lst_sort(&head);
+//	ft_lstiter(head, lst_node_print);
+	arr = lst_to_arr(head);
+	while (arr[len])
+	{
+		len++;
+	}
+	sort_arr_lst(arr);
+	while (arr[i])
+	{
+		lst_node_print((t_list*)arr[i++]);
+	}
+	ft_memdel((void*)&arr);
+	ft_lstdel(&head, lst_del_content);
 }
