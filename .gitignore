@@ -1,11 +1,7 @@
 ._*
 .nfs*
-a.out*
+*.out
 *.swp
 *.o
 *.a
 *.DS_Store
-test.c
-main.c
-notes.txt
-alphabet/*

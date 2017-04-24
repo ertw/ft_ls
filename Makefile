@@ -2,7 +2,7 @@
 
 LIBRARY = ./libft/libft.a
 
-NAME = recurse
+NAME = recurse.out
 
 HEADERS = recurse.h
 
