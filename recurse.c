@@ -44,8 +44,6 @@ void			lst_del_meta(void *content, size_t sizeofcontent)
 	ft_memdel((void**)(t_metadata*)&content);
 }
 
-/* manually create a meta */
-
 /* recursively create the list */
 t_list			*lst_dir_make(DIR *dirp)
 {
@@ -64,20 +62,55 @@ t_list			*lst_dir_make(DIR *dirp)
 	return (node);
 }
 
+/* create a meta node */
+t_list			*lst_met_make(char *path)
+{
+	t_metadata	met;
+
+	met.path = path;
+	met.maxsize = 0;
+	met.totalblocks = 0;
+
+	return (ft_lstnew(&met, sizeof(met)));
+}
+
 /* print out each node's word */
 void			lst_node_print(t_list *node)
 {
 	printf("%s\n", C_DIR(node)->s_dirent.d_name);
 }
 
-/* delete each list node */
-void			lst_del_content(void *content, size_t sizeofcontent)
+void			arr_foreach(t_list **arr, void (*visit)(t_list*))
+{
+	int	i;
+
+	i = 0;
+	while (arr[i])
+	{
+		visit(arr[i]);
+		i++;
+	}
+}
+
+/* delete each dir list node */
+void			lst_del_dir(void *content, size_t sizeofcontent)
 {
 	if (!sizeofcontent)
 	{
 		;
 	}
 	ft_memdel((void**)(t_directory*)&content);
+}
+
+/* delete each meta list node */
+void			lst_del_met(void *content, size_t sizeofcontent)
+{
+	if (!sizeofcontent)
+	{
+		;
+	}
+	ft_strdel(&((t_metadata*)content)->path);
+	ft_memdel((void**)(t_metadata*)&content);
 }
 
 /* put t_list pointers into array */
@@ -170,25 +203,16 @@ int			main(void)
 	t_list		*head;
 	DIR		*dirp;
 	t_list		**arr;
-	int		i = 0;
-	int		len = 0;
 
 	if (!(dirp = opendir(".")))
 		dprintf(2, "%s: No such file or directory\n", "C_META(parent_meta)->path");
-	head = lst_dir_make(dirp);
+//	head = lst_dir_make(dirp);
+	head = lst_met_make(".");
 	ft_memdel((void*)&dirp);
-//	lst_sort(&head);
-//	ft_lstiter(head, lst_node_print);
 	arr = lst_to_arr(head);
-	while (arr[len])
-	{
-		len++;
-	}
 	sort_arr_lst(arr);
-	while (arr[i])
-	{
-		lst_node_print((t_list*)arr[i++]);
-	}
+	arr_foreach(arr, lst_node_print);
 	ft_memdel((void*)&arr);
-	ft_lstdel(&head, lst_del_content);
+//	ft_lstdel(&head, lst_del_content);
+	ft_lstdel(&head, lst_del_meta);
 }

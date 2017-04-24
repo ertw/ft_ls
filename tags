@@ -56,6 +56,7 @@ READ_ERROR	libft/get_next_line.h	/^# define READ_ERROR /;"	d
 advance_hidden_names	recurse.c	/^void				advance_hidden_names(char **str)$/;"	f	typeref:typename:void
 all	Makefile	/^all: information $(NAME)$/;"	t
 all	libft/Makefile	/^all: $(NAME)$/;"	t
+arr_foreach	recurse.c	/^void			arr_foreach(t_list **arr, void (*visit)(t_list*))$/;"	f	typeref:typename:void
 blocks	dirlist.c	/^	quad_t				blocks;				\/\/ blocks of the file$/;"	m	struct:s_container	typeref:typename:quad_t	file:
 char_to_int	libft/ft_atoi.c	/^static int	char_to_int(char c)$/;"	f	typeref:typename:int	file:
 clean	Makefile	/^clean:$/;"	t
@@ -162,8 +163,9 @@ len	libft/get_next_line.h	/^	int				len;$/;"	m	struct:s_tuple	typeref:typename:i
 len	libft/libft.h	/^	size_t			len;$/;"	m	struct:s_vec	typeref:typename:size_t
 lst_del	dirlist.c	/^void					lst_del(t_list *head)$/;"	f	typeref:typename:void
 lst_del_content	practice_datastructure.c	/^void			lst_del_content(void *content, size_t sizeofcontent)$/;"	f	typeref:typename:void
-lst_del_content	recurse.c	/^void			lst_del_content(void *content, size_t sizeofcontent)$/;"	f	typeref:typename:void
+lst_del_dir	recurse.c	/^void			lst_del_dir(void *content, size_t sizeofcontent)$/;"	f	typeref:typename:void
 lst_del_directory	recurse.c	/^void			lst_del_directory(void *content, size_t sizeofcontent)$/;"	f	typeref:typename:void
+lst_del_met	recurse.c	/^void			lst_del_met(void *content, size_t sizeofcontent)$/;"	f	typeref:typename:void
 lst_del_meta	recurse.c	/^void			lst_del_meta(void *content, size_t sizeofcontent)$/;"	f	typeref:typename:void
 lst_dir_make	recurse.c	/^t_list			*lst_dir_make(DIR *dirp)$/;"	f	typeref:typename:t_list *
 lst_insert	ft_ls.c	/^void		lst_insert(t_list **alst, void *content, size_t size)$/;"	f	typeref:typename:void
@@ -171,6 +173,7 @@ lst_insert	numlist.c	/^void		lst_insert(t_list **alst, void *content, size_t siz
 lst_inst_node	dirlist.c	/^void					lst_inst_node(t_list **alst, t_list *node)$/;"	f	typeref:typename:void
 lst_make	practice_datastructure.c	/^t_list			*lst_make(FILE *in)$/;"	f	typeref:typename:t_list *
 lst_make_node	dirlist.c	/^t_list					*lst_make_node(struct dirent *dptr, t_metadata *metadata)$/;"	f	typeref:typename:t_list *
+lst_met_make	recurse.c	/^t_list			*lst_met_make(char *path)$/;"	f	typeref:typename:t_list *
 lst_node_print	practice_datastructure.c	/^void			lst_node_print(t_list *node)$/;"	f	typeref:typename:void
 lst_node_print	recurse.c	/^void			lst_node_print(t_list *node)$/;"	f	typeref:typename:void
 lst_to_arr	recurse.c	/^t_list			**lst_to_arr(t_list *head)$/;"	f	typeref:typename:t_list **
