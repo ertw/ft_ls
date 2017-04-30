@@ -206,7 +206,7 @@ int			main(void)
 
 	if (!(dirp = opendir(".")))
 		dprintf(2, "%s: No such file or directory\n", "C_META(parent_meta)->path");
-//	head = lst_dir_make(dirp);
+	head = lst_dir_make(dirp);
 	head = lst_met_make(".");
 	ft_memdel((void*)&dirp);
 	arr = lst_to_arr(head);
