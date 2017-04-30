@@ -12,6 +12,9 @@
 
 #ifndef FTLS_H
 # define FTLS_H
+# ifdef __FreeBSD__
+#  define _GNU_SOURCE
+# endif
 # include "./libft/libft.h"
 # include <dirent.h>
 # include <stdio.h>
