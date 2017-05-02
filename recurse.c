@@ -121,16 +121,20 @@ void			lst_node_print(t_list *node)
 /* print the node, and if it's a directory, push a new meta */
 void			lst_node_process(t_list *node)
 {
+	t_list	*cursor;
+
 	if (!node)
 		return ;
 	lst_node_print(node);
 	if (S_ISDIR(C_DIR(node)->s_stats.st_mode))
 	{
-		if (!(!(ft_strcmp("..", C_DIR(node)->s_dirent.d_name))
-			|| !(ft_strcmp(".", C_DIR(node)->s_dirent.d_name))))
+		if (!(ft_strequ("..", C_DIR(node)->s_dirent.d_name)
+			|| ft_strequ(".", C_DIR(node)->s_dirent.d_name)))
 		{
-//			C_MET(C_DIR(node)->metadata)->next = lst_met_make(ft_pathjoin(C_DIR(node)->s_dirent.d_name, C_MET(C_DIR(node)->metadata)->path));
-//			C_MET(C_DIR(node)->metadata)->next = lst_met_make(C_DIR(node)->s_dirent.d_name);
+			cursor = C_DIR(node)->metadata;
+			while (cursor->next)
+				cursor = cursor->next;
+			cursor->next = lst_met_make(C_DIR(node)->s_dirent.d_name);
 			printf("<DIR>\n");
 		}
 	}
@@ -258,12 +262,18 @@ void sort_arr_lst(t_list **arr)
 int			main(void)
 {
 	t_list		*head;
+	t_list		*cursor;
 	t_list		**arr;
 
 	head= lst_met_make(".");
-	arr = lst_to_arr(C_MET(head)->directory);
-	sort_arr_lst(arr);
-	arr_foreach(arr, lst_node_process);
-	ft_memdel((void*)&arr);
+	cursor = head;
+	while (cursor)
+	{
+		arr = lst_to_arr(C_MET(head)->directory);
+		sort_arr_lst(arr);
+		arr_foreach(arr, lst_node_process);
+		ft_memdel((void*)&arr);
+		cursor = cursor->next;
+	}
 	ft_lstdel(&head, lst_del_meta);
 }
