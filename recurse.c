@@ -1,13 +1,15 @@
 #include "ft_ls.h"
-#define IS_TAIL !cursor->next
-#define IS_HEAD cursor == head
 #define C_DIR(node239) ((t_directory*)node239->content)
 #define C_MET(node098) ((t_metadata*)node098->content)
 
 /*
 p ((t_metadata*)node->content)->path
+p ((t_metadata*)cursor->content)->path
+p ((t_metadata*)cursor->content)->maxsize
+p ((t_metadata*)cursor->next->content)->path
 p ((t_directory*)node->content)->s_dirent.d_name
 p ((t_directory*)node->content)->metadata
+p cursor->next
 */
 
 /* holds information about a file or directory */
@@ -67,7 +69,7 @@ DIR			*open_dir(const char *path)
 	DIR	*dirp;
 
 	if (!(dirp = opendir(path)))
-		dprintf(2, "%s: No such file or directory\n", "C_META(parent_meta)->path");
+		dprintf(2, "%s: No such file or directory\n", path);
 	else
 		return (dirp);
 	return (NULL);
@@ -99,10 +101,11 @@ t_list			*lst_met_make(char *path)
 	t_metadata	met;
 	t_list		*this;
 
-	dirp = open_dir(path);
+	if (!(dirp = open_dir(path)))
+		return (NULL);
 	this = ft_lstnew(&met, sizeof(met));
 	{
-		met.path = path;
+		met.path = ft_strdup(path);
 		met.maxsize = 0;
 		met.totalblocks = 0;
 		met.next = NULL;
@@ -122,6 +125,7 @@ void			lst_node_print(t_list *node)
 void			lst_node_process(t_list *node)
 {
 	t_list	*cursor;
+	char	*path;
 
 	if (!node)
 		return ;
@@ -133,9 +137,15 @@ void			lst_node_process(t_list *node)
 		{
 			cursor = C_DIR(node)->metadata;
 			while (cursor->next)
+			{
+				printf("<NODE>\n");
 				cursor = cursor->next;
-			cursor->next = lst_met_make(C_DIR(node)->s_dirent.d_name);
-			printf("<DIR>\n");
+			}
+			path = ft_pathjoin(C_MET(C_DIR(node)->metadata)->path
+					, C_DIR(node)->s_dirent.d_name);
+			cursor->next = lst_met_make(path);
+			ft_strdel(&path);
+//			cursor->next = lst_met_make(C_DIR(node)->s_dirent.d_name);
 		}
 	}
 }
@@ -169,7 +179,8 @@ void			lst_del_met(void *content, size_t sizeofcontent)
 	{
 		;
 	}
-	ft_strdel(&((t_metadata*)content)->path);
+//	ft_strdel(&((t_metadata*)content)->path);
+//	free(((t_metadata*)content)->path);
 	ft_memdel((void**)(t_metadata*)&content);
 }
 
@@ -269,7 +280,7 @@ int			main(void)
 	cursor = head;
 	while (cursor)
 	{
-		arr = lst_to_arr(C_MET(head)->directory);
+		arr = lst_to_arr(C_MET(cursor)->directory);
 		sort_arr_lst(arr);
 		arr_foreach(arr, lst_node_process);
 		ft_memdel((void*)&arr);

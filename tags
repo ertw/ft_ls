@@ -30,11 +30,9 @@ HEADERS	Makefile	/^HEADERS = ft_ls.h$/;"	m
 IS_HEAD	dirlist.c	/^#define IS_HEAD /;"	d	file:
 IS_HEAD	ft_ls.c	/^#define IS_HEAD /;"	d	file:
 IS_HEAD	numlist.c	/^#define IS_HEAD /;"	d	file:
-IS_HEAD	recurse.c	/^#define IS_HEAD /;"	d	file:
 IS_TAIL	dirlist.c	/^#define IS_TAIL /;"	d	file:
 IS_TAIL	ft_ls.c	/^#define IS_TAIL /;"	d	file:
 IS_TAIL	numlist.c	/^#define IS_TAIL /;"	d	file:
-IS_TAIL	recurse.c	/^#define IS_TAIL /;"	d	file:
 LIBFT_H	libft/libft.h	/^# define LIBFT_H$/;"	d
 LIBS	Makefile	/^LIBS = -L.\/libft -lft$/;"	m
 MAX_GROUPNAME_LEN	dirlist.c	/^#define MAX_GROUPNAME_LEN /;"	d	file:
