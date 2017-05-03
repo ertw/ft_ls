@@ -195,7 +195,7 @@ nl_ptr	libft/get_next_line.h	/^	char			*nl_ptr;$/;"	m	struct:s_tuple	typeref:typ
 nlinks	dirlist.c	/^	nlink_t				nlinks;				\/\/ number of links$/;"	m	struct:s_container	typeref:typename:nlink_t	file:
 open_dir	recurse.c	/^DIR			*open_dir(const char *path)$/;"	f	typeref:typename:DIR *
 parseflags	ft_ls.c	/^t_opts			parseflags(char *flags)$/;"	f	typeref:typename:t_opts
-path	recurse.c	/^	char		*path;			\/\/ path to here$/;"	m	struct:s_metadata	typeref:typename:char *	file:
+path	recurse.c	/^	char		path[2048];			\/\/ path to here$/;"	m	struct:s_metadata	typeref:typename:char[2048]	file:
 pos	libft/get_next_line.h	/^	int				pos;$/;"	m	struct:s_tuple	typeref:typename:int
 print_ls_l	dirlist.c	/^void						print_ls_l(t_list *head)$/;"	f	typeref:typename:void
 print_permissions	dirlist.c	/^void					print_permissions(t_list *cursor)$/;"	f	typeref:typename:void

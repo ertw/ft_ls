@@ -5,8 +5,11 @@
 /*
 p ((t_metadata*)node->content)->path
 p ((t_metadata*)cursor->content)->path
+p ((t_metadata*)node->content)->path
+p ((t_metadata*)node->content)->directory
 p ((t_metadata*)cursor->content)->maxsize
 p ((t_metadata*)cursor->next->content)->path
+p ((t_directory*)((t_metadata*)node->content)->directory)->s_stats
 p ((t_directory*)node->content)->s_dirent.d_name
 p ((t_directory*)node->content)->metadata
 p cursor->next
@@ -23,7 +26,7 @@ typedef struct		s_directory
 /* holds information about a list of files and directories */
 typedef struct		s_metadata
 {
-	char		*path;			// path to here
+	char		path[2048];			// path to here
 	intmax_t	maxsize;		// bytes of largest file in dir
 	quad_t		totalblocks;		// blockcount of dir
 	t_list		*next;			// next meta list, if any
@@ -84,13 +87,11 @@ t_list			*lst_dir_make(DIR *dirp, t_list *met)
 
 	if (!(direntptr = readdir(dirp)))
 		return (NULL);
-	{
-		stat(direntptr->d_name, &directory.s_stats);
-		ft_memmove(&directory.s_dirent, direntptr, sizeof(*direntptr));
-		directory.metadata = met;
-		node = ft_lstnew(&directory, sizeof(directory));
-		node->next = lst_dir_make(dirp, met);
-	}
+	stat(direntptr->d_name, &directory.s_stats);
+	ft_memmove(&directory.s_dirent, direntptr, sizeof(*direntptr));
+	directory.metadata = met;
+	node = ft_lstnew(&directory, sizeof(directory));
+	node->next = lst_dir_make(dirp, met);
 	return (node);
 }
 
@@ -99,20 +100,18 @@ t_list			*lst_met_make(char *path)
 {
 	DIR		*dirp;
 	t_metadata	met;
-	t_list		*this;
+	t_list		*node;
 
 	if (!(dirp = open_dir(path)))
 		return (NULL);
-	this = ft_lstnew(&met, sizeof(met));
-	{
-		met.path = ft_strdup(path);
-		met.maxsize = 0;
-		met.totalblocks = 0;
-		met.next = NULL;
-		C_MET(this)->directory = lst_dir_make(dirp, this);
-	}
+	ft_memmove(met.path, path, ft_strlen(path) + 1);
+	met.maxsize = 0;
+	met.totalblocks = 0;
+	met.next = NULL;
+	node = ft_lstnew(&met, sizeof(met));
+	C_MET(node)->directory = lst_dir_make(dirp, node);
 	ft_memdel((void*)&dirp);
-	return (this);
+	return (node);
 }
 
 /* print out each node's word */
@@ -130,23 +129,23 @@ void			lst_node_process(t_list *node)
 	if (!node)
 		return ;
 	lst_node_print(node);
+	if (ft_strequ("1", C_DIR(node)->s_dirent.d_name))
+		printf("<INSIDE!>\n");
 	if (S_ISDIR(C_DIR(node)->s_stats.st_mode))
 	{
-		if (!(ft_strequ("..", C_DIR(node)->s_dirent.d_name)
-			|| ft_strequ(".", C_DIR(node)->s_dirent.d_name)))
+		if (ft_strequ("..", C_DIR(node)->s_dirent.d_name)
+			|| ft_strequ(".", C_DIR(node)->s_dirent.d_name))
+			return ;
+		cursor = C_DIR(node)->metadata;
+		while (cursor)
 		{
-			cursor = C_DIR(node)->metadata;
-			while (cursor->next)
-			{
-				printf("<NODE>\n");
-				cursor = cursor->next;
-			}
-			path = ft_pathjoin(C_MET(C_DIR(node)->metadata)->path
-					, C_DIR(node)->s_dirent.d_name);
-			cursor->next = lst_met_make(path);
-			ft_strdel(&path);
-//			cursor->next = lst_met_make(C_DIR(node)->s_dirent.d_name);
+			printf("<NODE>\n");
+			cursor = cursor->next;
 		}
+		path = ft_pathjoin(C_MET(C_DIR(node)->metadata)->path, C_DIR(node)->s_dirent.d_name);
+		cursor = lst_met_make(path);
+		printf("<PATH: %s>\n", path);
+		ft_strdel(&path);
 	}
 }
 
@@ -276,7 +275,7 @@ int			main(void)
 	t_list		*cursor;
 	t_list		**arr;
 
-	head= lst_met_make(".");
+	head= lst_met_make("./test");
 	cursor = head;
 	while (cursor)
 	{
