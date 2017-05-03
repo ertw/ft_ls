@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   arr_foreach.c                                      :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: ewilliam <me@erik.tw>                      +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2016/11/28 19:54:51 by ewilliam          #+#    #+#             */
+/*   Updated: 2016/11/29 18:10:39 by ewilliam         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "../includes/ft_ls.h"
 
 /*
@@ -13,14 +25,17 @@ p ((t_directory*)node->content)->metadata
 p cursor->next
 */
 
-/* (IN JEREMY CLARKSON VOICE) some say this is the most important function... */
+/*
+ **(IN JEREMY CLARKSON VOICE) some say this is the most important function...
+*/
+
 int			main(void)
 {
 	t_list		*head;
 	t_list		*cursor;
 	t_list		**arr;
 
-	head= lst_met_make("./test");
+	head = lst_met_make("./test");
 	cursor = head;
 	while (cursor)
 	{

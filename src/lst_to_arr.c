@@ -12,13 +12,16 @@
 
 #include "../includes/ft_ls.h"
 
-/* put t_list pointers into array */
+/*
+** put t_list pointers into array
+*/
+
 t_list			**lst_to_arr(t_list *head)
 {
-	t_list		*cursor;
+	t_list	*cursor;
 	int		len;
 	int		i;
-	t_list		**arr;
+	t_list	**arr;
 
 	cursor = head;
 	len = 0;

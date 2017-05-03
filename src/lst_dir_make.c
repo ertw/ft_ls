@@ -12,13 +12,17 @@
 
 #include "../includes/ft_ls.h"
 
-/* recursively create the list */
+/*
+ ** recursively create the list
+*/
+
 t_list			*lst_dir_make(DIR *dirp, t_list *met)
 {
-	t_list		*node = NULL;
+	t_list			*node;
 	struct dirent	*direntptr;
-	t_directory	directory;
+	t_directory		directory;
 
+	node = NULL;
 	if (!(direntptr = readdir(dirp)))
 		return (NULL);
 	stat(direntptr->d_name, &directory.s_stats);

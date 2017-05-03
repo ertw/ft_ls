@@ -12,13 +12,19 @@
 
 #include "../includes/ft_ls.h"
 
-/* print out each node's word */
+/*
+** print out each node's word
+*/
+
 static void		lst_node_print(t_list *node)
 {
 	printf("%s\n", C_DIR(node)->s_dirent.d_name);
 }
 
-/* print the node, and if it's a directory, push a new meta */
+/*
+** print the node, and if it's a directory, push a new meta
+*/
+
 void			lst_node_process(t_list *node)
 {
 	t_list	*cursor;
@@ -40,7 +46,8 @@ void			lst_node_process(t_list *node)
 			printf("<NODE>\n");
 			cursor = cursor->next;
 		}
-		path = ft_pathjoin(C_MET(C_DIR(node)->metadata)->path, C_DIR(node)->s_dirent.d_name);
+		path = ft_pathjoin(C_MET(C_DIR(node)->metadata)->path,
+				C_DIR(node)->s_dirent.d_name);
 		cursor = lst_met_make(path);
 		printf("<PATH: %s>\n", path);
 		ft_strdel(&path);

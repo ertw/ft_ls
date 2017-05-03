@@ -12,7 +12,10 @@
 
 #include "../includes/ft_ls.h"
 
-/* try to open a path, if that fails, print error */
+/*
+** try to open a path, if that fails, print error
+*/
+
 static DIR	*open_dir(const char *path)
 {
 	DIR	*dirp;
@@ -24,10 +27,13 @@ static DIR	*open_dir(const char *path)
 	return (NULL);
 }
 
-/* create a meta node */
+/*
+** create a meta node
+*/
+
 t_list		*lst_met_make(char *path)
 {
-	DIR		*dirp;
+	DIR			*dirp;
 	t_metadata	met;
 	t_list		*node;
 

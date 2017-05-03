@@ -12,8 +12,11 @@
 
 #include "../includes/ft_ls.h"
 
-/* delete each dir list node */
-void			lst_del_dir(void *content, size_t sizeofcontent)
+/*
+ ** delete each dir list node
+*/
+
+void	lst_del_dir(void *content, size_t sizeofcontent)
 {
 	if (!sizeofcontent)
 	{

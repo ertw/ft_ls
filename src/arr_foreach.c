@@ -12,7 +12,10 @@
 
 #include "../includes/ft_ls.h"
 
-/* iterate over an array of *t_list */
+/*
+ ** iterate over an array of *t_list
+*/
+
 void			arr_foreach(t_list **arr, void (*visit)(t_list*))
 {
 	int	i;
