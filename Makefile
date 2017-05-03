@@ -2,17 +2,19 @@
 
 LIBS = -L./libft -lft
 
-NAME = recurse.out
+SRC = src
 
-HEADERS = ft_ls.h
+NAME = ft_ls.out
 
-OBJECTS = recurse.o
+#HEADERS = ft_ls.h
+
+OBJECTS = $(SRC)/lst_met_make.o $(SRC)/arr_foreach.o $(SRC)/lst_del_dir.o $(SRC)/lst_del_met.o $(SRC)/lst_to_arr.o $(SRC)/sort_arr_lst.o $(SRC)/lst_node_process.o $(SRC)/ft_joinpath.o $(SRC)/lst_dir_make.o $(SRC)/ft_ls.o
 
 CFLAGS = -Wall -Werror -Wextra -g -fno-omit-frame-pointer -fsanitize=address
 
 all: information $(NAME)
 
-$(NAME): $(OBJECTS) $(HEADERS)
+$(NAME): $(OBJECTS)#$(HEADERS)
 	make -C ./libft/
 	$(CC) $(CFLAGS) $(OBJECTS) $(LIBS) -o $@
 clean:
