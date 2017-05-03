@@ -13,7 +13,7 @@ p ((t_directory*)node->content)->metadata
 p cursor->next
 */
 
-/* some say, this is the most important function... */
+/* (IN JEREMY CLARKSON VOICE) some say this is the most important function... */
 int			main(void)
 {
 	t_list		*head;

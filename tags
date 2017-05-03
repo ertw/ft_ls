@@ -38,7 +38,7 @@ MAX_GROUPNAME_LEN	old/dirlist.c	/^#define MAX_GROUPNAME_LEN /;"	d	file:
 MAX_STR	old/practice_datastructure.c	/^#define MAX_STR /;"	d	file:
 MAX_USERNAME_LEN	old/dirlist.c	/^#define MAX_USERNAME_LEN /;"	d	file:
 METADATA	old/dirlist.c	/^#define METADATA /;"	d	file:
-NAME	Makefile	/^NAME = recurse.out$/;"	m
+NAME	Makefile	/^NAME = ft_ls.out$/;"	m
 NAME	libft/Makefile	/^NAME = libft.a$/;"	m
 NODE	old/practice_datastructure.c	/^#define NODE(/;"	d	file:
 OBJECTS	Makefile	/^OBJECTS = $(SRC)\/lst_met_make.o $(SRC)\/arr_foreach.o $(SRC)\/lst_del_dir.o $(SRC)\/lst_del_met/;"	m
