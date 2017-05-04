@@ -7,7 +7,7 @@
 !_TAG_PROGRAM_VERSION	0.0.0	/3a7e0bb9/
 $(NAME)	Makefile	/^$(NAME): $(OBJECTS)#$(HEADERS)$/;"	t
 $(NAME)	libft/Makefile	/^$(NAME): $(OBJECTS)$/;"	t
-BLOCK_DIVISOR	includes/ft_ls.h	/^# define BLOCK_DIVISOR /;"	d
+BLOCK_DIVISOR	includes/ft_ls.h	/^#  define BLOCK_DIVISOR /;"	d
 BUFF_SIZE	libft/get_next_line.h	/^# define BUFF_SIZE /;"	d
 CFLAGS	Makefile	/^CFLAGS = -Wall -Werror -Wextra -g -fno-omit-frame-pointer -fsanitize=address$/;"	m
 CFLAGS	libft/Makefile	/^CFLAGS = -Wall -Werror -Wextra -g -fno-omit-frame-pointer -fsanitize=address$/;"	m
@@ -19,12 +19,12 @@ CONT_MODE	old/dirlist.c	/^#define CONT_MODE /;"	d	file:
 CONT_NLINKS	old/dirlist.c	/^#define CONT_NLINKS /;"	d	file:
 CONT_S_STAT	old/dirlist.c	/^#define CONT_S_STAT /;"	d	file:
 CONT_S_STAT_ATIM	old/dirlist.c	/^#define CONT_S_STAT_ATIM /;"	d	file:
-CONT_S_STAT_CTIM	includes/ft_ls.h	/^# define CONT_S_STAT_CTIM /;"	d
+CONT_S_STAT_CTIM	includes/ft_ls.h	/^#  define CONT_S_STAT_CTIM /;"	d
 CONT_S_STAT_MTIM	old/dirlist.c	/^#define CONT_S_STAT_MTIM /;"	d	file:
 CONT_USERNAME	old/dirlist.c	/^#define CONT_USERNAME /;"	d	file:
-C_DIR	includes/ft_ls.h	/^#define C_DIR(/;"	d
-C_MET	includes/ft_ls.h	/^#define C_MET(/;"	d
-FTLS_H	includes/ft_ls.h	/^# define FTLS_H$/;"	d
+C_DIR	includes/ft_ls.h	/^# define C_DIR(/;"	d
+C_MET	includes/ft_ls.h	/^# define C_MET(/;"	d
+FT_LS_H	includes/ft_ls.h	/^# define FT_LS_H$/;"	d
 GET_NEXT_LINE_H	libft/get_next_line.h	/^# define GET_NEXT_LINE_H$/;"	d
 IS_HEAD	old/dirlist.c	/^#define IS_HEAD /;"	d	file:
 IS_HEAD	old/ft_ls.c	/^#define IS_HEAD /;"	d	file:
@@ -59,7 +59,7 @@ clean	libft/Makefile	/^clean:$/;"	t
 compare_names_alpha	src/sort_arr_lst.c	/^static int	compare_names_alpha(t_directory *cont1, t_directory *cont2)$/;"	f	typeref:typename:int	file:
 content	libft/libft.h	/^	void			*content;$/;"	m	struct:s_list	typeref:typename:void *
 content_size	libft/libft.h	/^	size_t			content_size;$/;"	m	struct:s_list	typeref:typename:size_t
-directory	includes/ft_ls.h	/^	t_list		*directory;		\/\/ directory list associated with this meta list$/;"	m	struct:s_metadata	typeref:typename:t_list *
+directory	includes/ft_ls.h	/^	t_list			*directory;$/;"	m	struct:s_metadata	typeref:typename:t_list *
 fclean	Makefile	/^fclean: clean$/;"	t
 fclean	libft/Makefile	/^fclean: clean$/;"	t
 find_line	libft/get_next_line.c	/^static int		find_line(const int fd, char **line, char *full_line)$/;"	f	typeref:typename:int	file:
@@ -161,7 +161,7 @@ len	libft/get_next_line.h	/^	int				len;$/;"	m	struct:s_tuple	typeref:typename:i
 len	libft/libft.h	/^	size_t			len;$/;"	m	struct:s_vec	typeref:typename:size_t
 lst_del	old/dirlist.c	/^void					lst_del(t_list *head)$/;"	f	typeref:typename:void
 lst_del_content	old/practice_datastructure.c	/^void			lst_del_content(void *content, size_t sizeofcontent)$/;"	f	typeref:typename:void
-lst_del_dir	src/lst_del_dir.c	/^void			lst_del_dir(void *content, size_t sizeofcontent)$/;"	f	typeref:typename:void
+lst_del_dir	src/lst_del_dir.c	/^void	lst_del_dir(void *content, size_t sizeofcontent)$/;"	f	typeref:typename:void
 lst_del_met	src/lst_del_met.c	/^void			lst_del_met(void *content, size_t sizeofcontent)$/;"	f	typeref:typename:void
 lst_dir_make	src/lst_dir_make.c	/^t_list			*lst_dir_make(DIR *dirp, t_list *met)$/;"	f	typeref:typename:t_list *
 lst_insert	old/ft_ls.c	/^void		lst_insert(t_list **alst, void *content, size_t size)$/;"	f	typeref:typename:void
@@ -179,20 +179,20 @@ main	old/ft_ls.c	/^int			main(int ac, char **av)$/;"	f	typeref:typename:int
 main	old/numlist.c	/^int		main(int ac, char **av)$/;"	f	typeref:typename:int
 main	old/practice_datastructure.c	/^int			main(void)$/;"	f	typeref:typename:int
 main	src/ft_ls.c	/^int			main(void)$/;"	f	typeref:typename:int
-maxsize	includes/ft_ls.h	/^	intmax_t	maxsize;		\/\/ bytes of largest file in dir$/;"	m	struct:s_metadata	typeref:typename:intmax_t
+maxsize	includes/ft_ls.h	/^	intmax_t		maxsize;$/;"	m	struct:s_metadata	typeref:typename:intmax_t
 maxsize	old/dirlist.c	/^	uintmax_t			maxsize;			\/\/largest file, for printf width$/;"	m	struct:s_metadata	typeref:typename:uintmax_t	file:
-metadata	includes/ft_ls.h	/^	t_list		*metadata;		\/\/ meta list associated with this directory list$/;"	m	struct:s_directory	typeref:typename:t_list *
+metadata	includes/ft_ls.h	/^	t_list			*metadata;$/;"	m	struct:s_directory	typeref:typename:t_list *
 metadata	old/dirlist.c	/^	t_metadata			*metadata;$/;"	m	struct:s_container	typeref:typename:t_metadata *	file:
 mode	old/dirlist.c	/^	mode_t				mode;$/;"	m	struct:s_container	typeref:typename:mode_t	file:
 name	old/ft_ls.c	/^	char			name[256];$/;"	m	struct:s_input	typeref:typename:char[256]	file:
-next	includes/ft_ls.h	/^	t_list		*next;			\/\/ next meta list, if any$/;"	m	struct:s_metadata	typeref:typename:t_list *
+next	includes/ft_ls.h	/^	t_list			*next;$/;"	m	struct:s_metadata	typeref:typename:t_list *
 next	libft/libft.h	/^	struct s_list	*next;$/;"	m	struct:s_list	typeref:struct:s_list *
 next	old/dirlist.c	/^	struct s_container	*next;					\/\/ if dir, use this to get next list$/;"	m	struct:s_container	typeref:struct:s_container *	file:
 nl_ptr	libft/get_next_line.h	/^	char			*nl_ptr;$/;"	m	struct:s_tuple	typeref:typename:char *
 nlinks	old/dirlist.c	/^	nlink_t				nlinks;				\/\/ number of links$/;"	m	struct:s_container	typeref:typename:nlink_t	file:
 open_dir	src/lst_met_make.c	/^static DIR	*open_dir(const char *path)$/;"	f	typeref:typename:DIR *	file:
 parseflags	old/ft_ls.c	/^t_opts			parseflags(char *flags)$/;"	f	typeref:typename:t_opts
-path	includes/ft_ls.h	/^	char		path[2048];			\/\/ path to here$/;"	m	struct:s_metadata	typeref:typename:char[2048]
+path	includes/ft_ls.h	/^	char			path[2048];$/;"	m	struct:s_metadata	typeref:typename:char[2048]
 pos	libft/get_next_line.h	/^	int				pos;$/;"	m	struct:s_tuple	typeref:typename:int
 print_ls_l	old/dirlist.c	/^void						print_ls_l(t_list *head)$/;"	f	typeref:typename:void
 print_permissions	old/dirlist.c	/^void					print_permissions(t_list *cursor)$/;"	f	typeref:typename:void
@@ -200,7 +200,6 @@ processfiles	old/dirlist.c	/^t_list					*processfiles(t_list *head)$/;"	f	typere
 processfiles	old/ft_ls.c	/^t_list			*processfiles(t_list *head)$/;"	f	typeref:typename:t_list *
 processinput	old/dirlist.c	/^t_list					*processinput(int ac, char **av)$/;"	f	typeref:typename:t_list *
 processinput	old/ft_ls.c	/^t_list			*processinput(int ac, char **av)$/;"	f	typeref:typename:t_list *
-quad_t	includes/ft_ls.h	/^# define quad_t /;"	d
 r	old/ft_ls.c	/^	int					r;$/;"	m	struct:s_opts	typeref:typename:int	file:
 re	Makefile	/^re: fclean all$/;"	t
 re	libft/Makefile	/^re: fclean all$/;"	t
@@ -210,7 +209,7 @@ readfiles	old/ft_ls.c	/^void			readfiles(DIR *dirp)$/;"	f	typeref:typename:void
 s_container	old/dirlist.c	/^typedef struct			s_container$/;"	s	file:
 s_container	old/practice_datastructure.c	/^typedef struct		s_container$/;"	s	file:
 s_directory	includes/ft_ls.h	/^typedef struct		s_directory$/;"	s
-s_dirent	includes/ft_ls.h	/^	struct dirent	s_dirent;		\/\/ copy of dirent$/;"	m	struct:s_directory	typeref:struct:dirent
+s_dirent	includes/ft_ls.h	/^	struct dirent	s_dirent;$/;"	m	struct:s_directory	typeref:struct:dirent
 s_dirent	old/dirlist.c	/^	struct dirent		s_dirent;				\/\/ removeme!$/;"	m	struct:s_container	typeref:struct:dirent	file:
 s_input	old/ft_ls.c	/^typedef struct			s_input$/;"	s	file:
 s_list	libft/libft.h	/^typedef struct		s_list$/;"	s
@@ -218,7 +217,7 @@ s_metadata	includes/ft_ls.h	/^typedef struct		s_metadata$/;"	s
 s_metadata	old/dirlist.c	/^typedef struct			s_metadata$/;"	s	file:
 s_opts	old/ft_ls.c	/^typedef struct			s_opts$/;"	s	file:
 s_stat	old/dirlist.c	/^	struct stat			s_stat;				\/\/ removeme!$/;"	m	struct:s_container	typeref:struct:stat	file:
-s_stats	includes/ft_ls.h	/^	struct stat	s_stats;		\/\/ copy of stat$/;"	m	struct:s_directory	typeref:struct:stat
+s_stats	includes/ft_ls.h	/^	struct stat		s_stats;$/;"	m	struct:s_directory	typeref:struct:stat
 s_tuple	libft/get_next_line.h	/^typedef struct		s_tuple$/;"	s
 s_vec	libft/libft.h	/^typedef struct		s_vec$/;"	s
 set_blocks	old/dirlist.c	/^void					set_blocks(t_container *cont, struct stat *stats)$/;"	f	typeref:typename:void
@@ -241,15 +240,15 @@ str	old/practice_datastructure.c	/^	char		str[MAX_STR + 1];$/;"	m	struct:s_conta
 t	old/ft_ls.c	/^	int					t;$/;"	m	struct:s_opts	typeref:typename:int	file:
 t_container	old/dirlist.c	/^}						t_container;$/;"	t	typeref:struct:s_container	file:
 t_container	old/practice_datastructure.c	/^}			t_container;$/;"	t	typeref:struct:s_container	file:
-t_directory	includes/ft_ls.h	/^}			t_directory;$/;"	t	typeref:struct:s_directory
+t_directory	includes/ft_ls.h	/^}					t_directory;$/;"	t	typeref:struct:s_directory
 t_input	old/ft_ls.c	/^}				t_input;$/;"	t	typeref:struct:s_input	file:
 t_list	libft/libft.h	/^}					t_list;$/;"	t	typeref:struct:s_list
-t_metadata	includes/ft_ls.h	/^}			t_metadata;$/;"	t	typeref:struct:s_metadata
+t_metadata	includes/ft_ls.h	/^}					t_metadata;$/;"	t	typeref:struct:s_metadata
 t_metadata	old/dirlist.c	/^}						t_metadata;$/;"	t	typeref:struct:s_metadata	file:
 t_opts	old/ft_ls.c	/^}						t_opts;$/;"	t	typeref:struct:s_opts	file:
 t_tuple	libft/get_next_line.h	/^}					t_tuple;$/;"	t	typeref:struct:s_tuple
 t_vec	libft/libft.h	/^}					t_vec;$/;"	t	typeref:struct:s_vec
-totalblocks	includes/ft_ls.h	/^	quad_t		totalblocks;		\/\/ blockcount of dir$/;"	m	struct:s_metadata	typeref:typename:quad_t
+totalblocks	includes/ft_ls.h	/^	long double		totalblocks;$/;"	m	struct:s_metadata	typeref:typename:long double
 totalblocks	old/dirlist.c	/^	quad_t				totalblocks;			\/\/sum of blocks$/;"	m	struct:s_metadata	typeref:typename:quad_t	file:
 uid	old/dirlist.c	/^	uid_t				uid;$/;"	m	struct:s_container	typeref:typename:uid_t	file:
 username	old/dirlist.c	/^	char				username[MAX_USERNAME_LEN];$/;"	m	struct:s_container	typeref:typename:char[]	file:

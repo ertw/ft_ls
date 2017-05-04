@@ -21,12 +21,15 @@ t_list			*lst_dir_make(DIR *dirp, t_list *met)
 	t_list			*node;
 	struct dirent	*direntptr;
 	t_directory		directory;
+	char				*path;
 
 	node = NULL;
 	if (!(direntptr = readdir(dirp)))
 		return (NULL);
-	stat(direntptr->d_name, &directory.s_stats);
 	ft_memmove(&directory.s_dirent, direntptr, sizeof(*direntptr));
+	path = ft_pathjoin(C_MET(met)->path, direntptr->d_name);
+	stat(path, &directory.s_stats);
+	ft_strdel(&path);
 	directory.metadata = met;
 	node = ft_lstnew(&directory, sizeof(directory));
 	node->next = lst_dir_make(dirp, met);

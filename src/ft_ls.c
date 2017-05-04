@@ -20,6 +20,9 @@ p ((t_metadata*)node->content)->directory
 p ((t_metadata*)cursor->content)->maxsize
 p ((t_metadata*)cursor->next->content)->path
 p ((t_directory*)((t_metadata*)node->content)->directory)->s_stats
+p ((t_directory*)node->content)->s_stats
+p ((t_directory*)node->content)->s_stats.st_mode
+p ((t_directory*)node->content)->s_dirent
 p ((t_directory*)node->content)->s_dirent.d_name
 p ((t_directory*)node->content)->metadata
 p cursor->next

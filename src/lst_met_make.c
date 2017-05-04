@@ -39,7 +39,7 @@ t_list		*lst_met_make(char *path)
 
 	if (!(dirp = open_dir(path)))
 		return (NULL);
-	ft_memmove(met.path, path, ft_strlen(path) + 1);
+	ft_strcat(met.path, path);
 	met.maxsize = 0;
 	met.totalblocks = 0;
 	met.next = NULL;
