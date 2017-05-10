@@ -1,0 +1,22 @@
+!_TAG_FILE_FORMAT	2	/extended format; --format=1 will not append ;" to lines/
+!_TAG_FILE_SORTED	1	/0=unsorted, 1=sorted, 2=foldcase/
+!_TAG_OUTPUT_MODE	u-ctags	/u-ctags or e-ctags/
+!_TAG_PROGRAM_AUTHOR	Universal Ctags Team	//
+!_TAG_PROGRAM_NAME	Universal Ctags	/Derived from Exuberant Ctags/
+!_TAG_PROGRAM_URL	https://ctags.io/	/official site/
+!_TAG_PROGRAM_VERSION	0.0.0	/3a7e0bb9/
+advance_hidden_names	sort_arr_lst.c	/^static void	advance_hidden_names(char **str)$/;"	f	typeref:typename:void	file:
+arr_foreach	arr_foreach.c	/^void			arr_foreach(t_list **arr, void (*visit)(t_list*))$/;"	f	typeref:typename:void
+compare_names_alpha	sort_arr_lst.c	/^static int	compare_names_alpha(t_directory *cont1, t_directory *cont2)$/;"	f	typeref:typename:int	file:
+ft_pathjoin	ft_joinpath.c	/^char			*ft_pathjoin(const char *s1, const char *s2)$/;"	f	typeref:typename:char *
+lst_del_dir	lst_del_dir.c	/^void	lst_del_dir(void *content, size_t sizeofcontent)$/;"	f	typeref:typename:void
+lst_del_met	lst_del_met.c	/^void			lst_del_met(void *content, size_t sizeofcontent)$/;"	f	typeref:typename:void
+lst_dir_make	lst_dir_make.c	/^t_list				*lst_dir_make(DIR *dirp, t_list **met)$/;"	f	typeref:typename:t_list *
+lst_met_make	lst_met_make.c	/^t_list		*lst_met_make(char *path)$/;"	f	typeref:typename:t_list *
+lst_node_process	lst_node_process.c	/^void			lst_node_process(t_list *node)$/;"	f	typeref:typename:void
+lst_to_arr	lst_to_arr.c	/^t_list			**lst_to_arr(t_list *head)$/;"	f	typeref:typename:t_list **
+main	ft_ls.c	/^int			main(void)$/;"	f	typeref:typename:int
+open_dir	lst_met_make.c	/^static DIR	*open_dir(const char *path)$/;"	f	typeref:typename:DIR *	file:
+print_directory	lst_node_process.c	/^static void		print_directory(t_list *node)$/;"	f	typeref:typename:void	file:
+print_file	lst_node_process.c	/^static void		print_file(t_list *node)$/;"	f	typeref:typename:void	file:
+sort_arr_lst	sort_arr_lst.c	/^void		sort_arr_lst(t_list **arr)$/;"	f	typeref:typename:void

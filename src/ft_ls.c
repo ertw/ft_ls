@@ -16,8 +16,11 @@
 p ((t_metadata*)node->content)->path
 p ((t_metadata*)cursor->content)->path
 p ((t_metadata*)node->content)->path
+p ((t_metadata*)(**met)->content)->path
 p ((t_metadata*)node->content)->directory
+p ((t_metadata*)cursor->content)->directory
 p ((t_metadata*)cursor->content)->maxsize
+p ((t_metadata*)cursor->content)->path
 p ((t_metadata*)cursor->next->content)->path
 p ((t_directory*)((t_metadata*)node->content)->directory)->s_stats
 p ((t_directory*)node->content)->s_stats
@@ -25,6 +28,7 @@ p ((t_directory*)node->content)->s_stats.st_mode
 p ((t_directory*)node->content)->s_dirent
 p ((t_directory*)node->content)->s_dirent.d_name
 p ((t_directory*)node->content)->metadata
+p ((t_metadata*)((t_directory*)node->content)->metadata)->path
 p cursor->next
 */
 
@@ -42,7 +46,7 @@ int			main(void)
 	cursor = head;
 	while (cursor)
 	{
-		arr = lst_to_arr(C_MET(cursor)->directory);
+		arr = lst_to_arr(lst_dir_make(C_MET(cursor)->dirp, &cursor));
 		sort_arr_lst(arr);
 		arr_foreach(arr, lst_node_process);
 		ft_memdel((void*)&arr);

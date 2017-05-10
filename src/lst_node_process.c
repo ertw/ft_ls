@@ -13,12 +13,21 @@
 #include "../includes/ft_ls.h"
 
 /*
-** print out each node's word
+** print out filename
 */
 
-static void		lst_node_print(t_list *node)
+static void		print_file(t_list *node)
 {
 	printf("%s\n", C_DIR(node)->s_dirent.d_name);
+}
+
+/*
+** print out full directory path
+*/
+
+static void		print_directory(t_list *node)
+{
+	printf("%s:\n", C_DIR(node)->path);
 }
 
 /*
@@ -27,28 +36,17 @@ static void		lst_node_print(t_list *node)
 
 void			lst_node_process(t_list *node)
 {
-	t_list	*cursor;
-	t_list	*tmp;
-	char	*path;
-
 	if (!node)
 		return ;
-	lst_node_print(node);
-//	printf("<NAME: %s >\n", C_DIR(node)->s_dirent.d_name);
-//	printf("<MODE: %d >\n", (C_DIR(node)->s_stats.st_mode));
-//	printf("<ISDIR: %d >\n", S_IFDIR == (C_DIR(node)->s_stats.st_mode & S_IFMT));
-	if (S_ISDIR(C_DIR(node)->s_stats.st_mode))
+//	printf("<PATH: %s >\n", C_DIR(node)->path);
+//	if (!S_ISDIR(C_DIR(node)->s_stats.st_mode))
+	if (C_DIR(node)->s_dirent.d_type != DT_DIR)
+		print_file(node);
+	else
 	{
-//		printf("<DIR>\n");
 		if (ft_strequ("..", C_DIR(node)->s_dirent.d_name)
 			|| ft_strequ(".", C_DIR(node)->s_dirent.d_name))
 			return ;
-		cursor = C_DIR(node)->metadata;
-		tmp = cursor->next;
-		path = ft_pathjoin(C_MET(C_DIR(node)->metadata)->path,
-				C_DIR(node)->s_dirent.d_name);
-		cursor->next = lst_met_make(path);
-		cursor->next->next = tmp;
-		ft_strdel(&path);
+		print_directory(node);
 	}
 }

@@ -37,14 +37,15 @@ t_list		*lst_met_make(char *path)
 	t_metadata	met;
 	t_list		*node;
 
+	ft_bzero(&met, sizeof(met));
 	if (!(dirp = open_dir(path)))
 		return (NULL);
-	ft_strcat(met.path, path);
+	ft_memmove(met.path, path, ft_strlen(path) + 1);
 	met.maxsize = 0;
 	met.totalblocks = 0;
-	met.next = NULL;
+	met.dirp = dirp;
 	node = ft_lstnew(&met, sizeof(met));
-	C_MET(node)->directory = lst_dir_make(dirp, node);
-	ft_memdel((void*)&dirp);
+//	C_MET(node)->directory = lst_dir_make(dirp, &node);
+//	ft_memdel((void*)&dirp);
 	return (node);
 }
