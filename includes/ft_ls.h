@@ -72,6 +72,19 @@ typedef struct		s_metadata
 	t_list			*directory;
 }					t_metadata;
 
+/*
+ ** holds flags
+ */
+
+typedef struct		s_flags
+{
+	int			l;
+	int			R;
+	int			a;
+	int			r;
+	int			t;
+}					t_flags;
+
 t_list				*lst_dir_make(DIR *dirp, t_list **met);
 t_list				*lst_met_make(char *path);
 char				*ft_pathjoin(const char *s1, const char *s2);

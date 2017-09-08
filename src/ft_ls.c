@@ -33,15 +33,71 @@ p cursor->next
 */
 
 /*
+ ** creates and nulls out flags structure
+ */
+
+t_flags *init_flags(void)
+{
+	t_flags	*flags;
+	flags = malloc(sizeof(*flags));
+	flags->l = 0;
+	flags->R = 0;
+	flags->a = 0;
+	flags->r = 0;
+	flags->t = 0;
+	return (flags);
+}
+
+/*
+ ** process the arguments
+ */
+
+int read_args(int argc, char **argv, t_flags *flags)
+{
+	int ch;
+
+	while ((ch = getopt(argc, argv, "lRart")) != -1)
+	{
+		switch (ch)
+		{
+			case 'l':
+				printf("long format flag\n");
+				flags->l = 1;
+				break;
+			case 'R':
+				printf("recursive flag\n");
+				flags->R = 1;
+				break;
+			case 'a':
+				printf("include hidden flag\n");
+				flags->a = 1;
+				break;
+			case 'r':
+				printf("print reverse flag\n");
+				flags->r = 1;
+				break;
+			case 't':
+				printf("sort by time modified flag\n");
+				flags->t = 1;
+				break;
+		}
+	}
+	return (0);
+}
+
+/*
  **(IN JEREMY CLARKSON VOICE) some say this is the most important function...
 */
 
-int			main(void)
+int			main(int argc, char **argv)
 {
 	t_list		*head;
 	t_list		*cursor;
 	t_list		**arr;
+	t_flags		*flags;
 
+	flags = init_flags();
+	read_args(argc, argv, flags);
 	head = lst_met_make("./test");
 	cursor = head;
 	while (cursor)
@@ -53,4 +109,5 @@ int			main(void)
 		cursor = cursor->next;
 	}
 	ft_lstdel(&head, lst_del_met);
+	ft_memdel((void*)&flags);
 }
